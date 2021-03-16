@@ -1,2 +1,2 @@
 # simple_scheduler
-Schedule events and periodic tasks
+Easily schedule multiple events and recurring tasks (simultaneously).
