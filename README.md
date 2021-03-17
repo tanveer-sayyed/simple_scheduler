@@ -71,20 +71,22 @@ correct argument precedence in a function
     >>> def target(a, b=1, *args, **kwargs):
             print(a, b, args, kwargs)
       
-Add 2 functions to be executed on the same time
+Add above target function twice. Each function would be called on timestamps
+(hour:minute) mentioned in list WHEN.
 
     >>> WHEN = ["16:55", "16:56"]
+    >>> TZ = "Asia/Kolkata"
     >>> event_scheduler.add_job(target= target,
                                 args = (0,), # ... use "," for single arguments
                                 kwargs = {"b":2},
                                 when = WHEN,
-                                tz = "Asia/Kolkata")
+                                tz = TZ)
     >>> event_scheduler.add_job(target= target,
                                 args = (0, 2, "arg1", "arg2"),
                                 kwargs = {"key1":"value1",
                                           "key2":"value2"},
                                 when = WHEN,
-                                tz = "Asia/Kolkata")
+                                tz = TZ)
     >>> event_scheduler.run()
         Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
         0 2 () {}
@@ -120,7 +122,7 @@ Note: The function-wait() executes in 10 seconds but is called every 5-seconds.
     >>> recurring_scheduler.verbose = True
     
 ## Complete code:
-
+```
 from time import sleep
 from simple_scheduler.event import event_scheduler
 from simple_scheduler.recurring import recurring_scheduler
@@ -154,3 +156,4 @@ recurring_scheduler.add_job(target=wait,
                             period_in_seconds=5) # but is called every 5-seconds.
 event_scheduler.run()
 recurring_scheduler.run()
+```
