@@ -6,7 +6,7 @@
   package does not begin execution of a job at the 0th-second of the minute.
 
 ## Install
-From [PyPi](https://pypi.org/project/simple_scheduler/):
+From [PyPi](https://pypi.org/project/simple_scheduler/) :
 
     pip install simple_scheduler
 

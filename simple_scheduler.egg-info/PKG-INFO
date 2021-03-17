@@ -14,20 +14,23 @@ Description: # simple_scheduler
           package does not begin execution of a job at the 0th-second of the minute.
         
         ## Install
-        From PyPi[(https://pypi.org/project/simple_scheduler/)]:
+        From [PyPi](https://pypi.org/project/simple_scheduler/) :
+        
             pip install simple_scheduler
         
         ## How to use?
         
-        ### Quick-start:
+        ### Quick-start
             Copy-paste the code at the bottom and run.
             
-        ### Long:
+        ### Long
         There are two different schedulers:
+        
             >>> from simple_scheduler.event import event_scheduler    
             >>> from simple_scheduler.recurring import recurring_scheduler
             
         Purpose of each scheduler:
+        
             >>> print(event_scheduler.__doc__)
              Event occurs at an exact time.
                 e.g. scirpt_1 is called at 14:00 and 20:00
@@ -37,9 +40,7 @@ Description: # simple_scheduler
              Recurring tasks are those that occur after every "x"-seconds.
                 (e.g. script_1 is called every 600 seconds)
                 
-            >>> print(event_scheduler.timezones())
-        
-        ### Using only event_scheduler:
+        #### Using only event_scheduler
         
             >>> print(event_scheduler.add_job.__doc__)
         
@@ -72,34 +73,58 @@ Description: # simple_scheduler
                 -------
                 None.
         
-            correct argument precedence in a function
+        correct argument precedence in a function
+        
             >>> def target(a, b=1, *args, **kwargs):
                     print(a, b, args, kwargs)
               
-            Add 2 functions to be executed on the same time
+        Add above target function twice. Each function would be called on timestamps
+        (hour:minute) mentioned in list WHEN.
+        
+            >>> WHEN = ["16:55", "16:56"]
+            >>> TZ = "Asia/Kolkata"
             >>> event_scheduler.add_job(target= target,
                                         args = (0,), # ... use "," for single arguments
                                         kwargs = {"b":2},
-                                        when = ["16:55", "16:56"],
-                                        tz = "Asia/Kolkata")
+                                        when = WHEN,
+                                        tz = TZ)
             >>> event_scheduler.add_job(target= target,
                                         args = (0, 2, "arg1", "arg2"),
                                         kwargs = {"key1":"value1",
                                                   "key2":"value2"},
-                                        when = ["16:55", "16:56"],
-                                        tz = "Asia/Kolkata")
+                                        when = WHEN,
+                                        tz = TZ)
             >>> event_scheduler.run()
-                
-        Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
-        0 2 () {}
-        Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
-        0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
-        Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
-        0 2 () {}
-        Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
-        0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}      
+                Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+                0 2 () {}
+                Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+                0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
+                Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+                0 2 () {}
+                Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+                0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
         
-        ### Using only recurrent_scheduler:
+        #### Using only recurrent_scheduler
+        
+            >>> print(recurring_scheduler.add_job.__doc__)
+        
+                Assigns an periodic task to a process.
+        
+                Parameters
+                ----------
+                target : a callable function
+                period_in_seconds : int
+                    the time period in seconds to execute this function
+                args : tuple(object,), optional
+                    un-named argumets for the "target" callable
+                    the default is ()
+                kwargs : dict{key:object}, optional
+                    named argumets for the "target" callable
+                    the default is {}
+        
+                Returns
+                -------
+                None.
             >>> from time import sleep
             >>> def wait(t):
                     sleep(t)
@@ -108,26 +133,34 @@ Description: # simple_scheduler
                                         kwargs={"t":10},
                                         period_in_seconds=5)
             >>> recurring_scheduler.run()
+                Wed Mar 17 17:14:30 2021 :: wait [recurring | 5-second(s)]
+                Wed Mar 17 17:14:35 2021 :: wait [recurring | 5-second(s)]
+                I waited 10 seconds
+                Wed Mar 17 17:14:40 2021 :: wait [recurring | 5-second(s)]
+                I waited 10 seconds
+                Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
         
-        Wed Mar 17 17:14:30 2021 :: wait [recurring | 5-second(s)]
-        Wed Mar 17 17:14:35 2021 :: wait [recurring | 5-second(s)]
-        I waited 10 seconds
-        Wed Mar 17 17:14:40 2021 :: wait [recurring | 5-second(s)]
-        I waited 10 seconds
-        Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
+        #### Note
+        The execution time of above "wait"-function is 10 seconds.
+        But, is being called every 5-seconds.
         
-        Note: The function-wait() executes in 10 seconds but is called every 5-seconds.
-        
-        ## Toggle verbose:
+        ### Toggle verbose
         
             >>> event_scheduler.verbose = False
             >>> recurring_scheduler.verbose = True
             
         ## Complete code:
-        
+        ```
         from time import sleep
         from simple_scheduler.event import event_scheduler
         from simple_scheduler.recurring import recurring_scheduler
+        
+        print(event_scheduler.__doc__)
+        print(event_scheduler.add_job.__doc__)
+        print()
+        print(recurring_scheduler.__doc__)
+        print(recurring_scheduler.add_job.__doc__)
+        print()
         
         # Select your timezone
         recurring_scheduler.timezones()
@@ -158,7 +191,7 @@ Description: # simple_scheduler
                                     period_in_seconds=5) # but is called every 5-seconds.
         event_scheduler.run()
         recurring_scheduler.run()
-        
+        ```
 Platform: UNKNOWN
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
