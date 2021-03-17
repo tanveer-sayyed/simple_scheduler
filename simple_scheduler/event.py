@@ -48,7 +48,7 @@ class Event(Schedule):
             else:
                 sleep(55)
 
-    def add_event(self, target, tz, when, args=(), kwargs={}):
+    def add_job(self, target, tz, when, args=(), kwargs={}):
         """
         Assigns an event to a process.
 
