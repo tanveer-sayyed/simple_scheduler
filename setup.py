@@ -1,5 +1,5 @@
 """
-    https://pythonhosted.org/an_example_pypi_project/setuptools.html
+    reference: https://pythonhosted.org/an_example_pypi_project/setuptools.html
 """
 
 import pathlib
@@ -11,7 +11,6 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 print(HERE)
 README = (HERE / "README.md").read_text()
-print(README)
 # This call to setup() does all the work
 setup(
     name="simple_scheduler",
@@ -31,9 +30,4 @@ setup(
     packages=["simple_scheduler"],
     include_package_data=True,
     install_requires=["pytz"],
-    # entry_points={
-    #     "console_scripts": [
-    #         "Vernal-Inertia=simple_scheduler.__main__:main",
-    #     ]
-    # },
 )

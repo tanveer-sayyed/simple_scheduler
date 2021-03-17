@@ -14,8 +14,7 @@ class Recurring(Schedule):
         """
         Parameters
         ----------
-        function : callable function{ctime(time())}
-            name of the function which needs to be scheduled
+        function : a callable function
         period_in_seconds : int
             the time period in seconds
 
