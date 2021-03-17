@@ -6,7 +6,7 @@
   package does not begin execution of a job at the 0th-second of the minute.
 
 ## Install
-From PyPi[(https://pypi.org/project/simple_scheduler/)]:
+From [PyPi](https://pypi.org/project/simple_scheduler/):
     pip install simple_scheduler
 
 ## How to use?
@@ -16,10 +16,12 @@ From PyPi[(https://pypi.org/project/simple_scheduler/)]:
     
 ### Long:
 There are two different schedulers:
+
     >>> from simple_scheduler.event import event_scheduler    
     >>> from simple_scheduler.recurring import recurring_scheduler
     
 Purpose of each scheduler:
+
     >>> print(event_scheduler.__doc__)
      Event occurs at an exact time.
         e.g. scirpt_1 is called at 14:00 and 20:00
