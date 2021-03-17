@@ -32,8 +32,6 @@ Purpose of each scheduler:
      Recurring tasks are those that occur after every "x"-seconds.
         (e.g. script_1 is called every 600 seconds)
         
-    >>> print(event_scheduler.timezones())
-
 #### Using only event_scheduler
 
     >>> print(event_scheduler.add_job.__doc__)
@@ -118,7 +116,7 @@ Add above target function twice. Each function would be called on timestamps
 The execution time of above "wait"-function is 10 seconds.
 But, is being called every 5-seconds.
 
-#### Toggle verbose
+### Toggle verbose
 
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
