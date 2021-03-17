@@ -36,7 +36,7 @@ class Recurring(Schedule):
                 p.start()
                 self._workers.append(p)
                 self._print(f"{ctime(time())} :: {function.__qualname__}"+\
-                            "[recurring]")
+                            f" [recurring | {period_in_seconds}-second(s)]")
             except Exception as e:
                 self._print(str(e))
                 [p.terminate for p in self._workers]
@@ -53,10 +53,10 @@ class Recurring(Schedule):
         period_in_seconds : int
             the time period in seconds to execute this function
         args : tuple(object,), optional
-            un-named argumets for the "target" function
+            un-named argumets for the "target" callable
             the default is ()
         kwargs : dict{key:object}, optional
-            named argumets for the "target" function
+            named argumets for the "target" callable
             the default is {}
 
         Returns

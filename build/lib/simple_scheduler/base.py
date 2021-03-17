@@ -25,12 +25,11 @@ class Schedule():
             pass
 
     def _manifest_function(self, target, args, kwargs):
-        try:        
+        try:
             function = partial(target, *args, **kwargs)
             function.__qualname__ = target.__qualname__
             function.__doc__ = target.__doc__
             return function
-        except TypeError:
+        except:
             self._processes = []
-            raise Exception(".add_job(...) method not properly called."+\
-                            " Please see:\n\t.add_job.__doc__ ")
+            raise

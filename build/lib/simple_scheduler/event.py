@@ -34,8 +34,7 @@ class Event(Schedule):
             minute_ = int(datetime.now(timezone(tz)).time().minute)
             if (hour_ == hour) & (minute_ == minute):
                 self._print(f"{ctime(time())} :: {function.__qualname__}" +\
-                            f" [event @{hour}:{minute} | {tz} time]")
-                print()
+                            f" [event @{hour}:{minute} | {tz}]")
                 for tries in range(3): # number of attempts for any job
                     try:
                         function()
@@ -59,19 +58,21 @@ class Event(Schedule):
             time zone (call the method .timezones() for more info)
         when : list(str)
             at what precise time(s) should the function be called
-            eg. ["12:34","23:45", ...] --> please "only" use 24-hour clock
+            eg. ["12:34","23:45", ...] --> please "only" use 24-hour clock,
+                                           with ":" as separator
         args : tuple(object,), optional
-            un-named argumets for the "target" function
+            un-named argumets for the "target" callable
             the default is ()
         kwargs : dict{key:object}, optional
-            named argumets for the "target" function
+            named argumets for the "target" callable
             the default is {}
 
         Raises
         ------
         Exception
             - If time (in "when"-list) is not a collection of "int:int"
-            eg. ["12:30am","2:30 pm", ...] --> please "only" use 24-hour clock
+            eg. ["12:30am","2:30 pm", ...] --> please "only" use 24-hour clock,
+                                               with ":" as separator
 
         Returns
         -------
