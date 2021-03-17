@@ -31,9 +31,9 @@ setup(
     packages=["simple_scheduler"],
     include_package_data=True,
     install_requires=["pytz"],
-    entry_points={
-        "console_scripts": [
-            "Vernal-Inertia=simple_scheduler.__main__:main",
-        ]
-    },
+    # entry_points={
+    #     "console_scripts": [
+    #         "Vernal-Inertia=simple_scheduler.__main__:main",
+    #     ]
+    # },
 )

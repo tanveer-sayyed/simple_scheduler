@@ -1,3 +1,0 @@
-[console_scripts]
-Vernal-Inertia = simple_scheduler.__main__:main
-
