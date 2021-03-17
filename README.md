@@ -12,10 +12,10 @@ From [PyPi](https://pypi.org/project/simple_scheduler/):
 
 ## How to use?
 
-### Quick-start:
+### Quick-start
     Copy-paste the code at the bottom and run.
     
-### Long:
+### Long
 There are two different schedulers:
 
     >>> from simple_scheduler.event import event_scheduler    
@@ -34,7 +34,7 @@ Purpose of each scheduler:
         
     >>> print(event_scheduler.timezones())
 
-### Using only event_scheduler:
+#### Using only event_scheduler
 
     >>> print(event_scheduler.add_job.__doc__)
 
@@ -98,7 +98,7 @@ Add above target function twice. Each function would be called on timestamps
         Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
         0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
 
-### Using only recurrent_scheduler:
+#### Using only recurrent_scheduler
     >>> from time import sleep
     >>> def wait(t):
             sleep(t)
@@ -114,11 +114,11 @@ Add above target function twice. Each function would be called on timestamps
         I waited 10 seconds
         Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
 
-### Note:
+#### Note
 The execution time of above "wait"-function is 10 seconds.
-But is being called every 5-seconds!
+But, is being called every 5-seconds.
 
-## Toggle verbose:
+#### Toggle verbose
 
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
