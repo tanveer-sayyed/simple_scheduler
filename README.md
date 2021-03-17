@@ -106,15 +106,15 @@ Add above target function twice. Each function would be called on timestamps
                                 kwargs={"t":10},
                                 period_in_seconds=5)
     >>> recurring_scheduler.run()
+        Wed Mar 17 17:14:30 2021 :: wait [recurring | 5-second(s)]
+        Wed Mar 17 17:14:35 2021 :: wait [recurring | 5-second(s)]
+        I waited 10 seconds
+        Wed Mar 17 17:14:40 2021 :: wait [recurring | 5-second(s)]
+        I waited 10 seconds
+        Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
 
-Wed Mar 17 17:14:30 2021 :: wait [recurring | 5-second(s)]
-Wed Mar 17 17:14:35 2021 :: wait [recurring | 5-second(s)]
-I waited 10 seconds
-Wed Mar 17 17:14:40 2021 :: wait [recurring | 5-second(s)]
-I waited 10 seconds
-Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
-
-Note: The function-wait() executes in 10 seconds but is called every 5-seconds.
+### Note:
+The function-wait() executes in 10 seconds but is called every 5-seconds.
 
 ## Toggle verbose:
 
