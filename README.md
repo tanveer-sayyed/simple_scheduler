@@ -7,6 +7,7 @@
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/):
+
     pip install simple_scheduler
 
 ## How to use?
