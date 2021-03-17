@@ -66,11 +66,13 @@ Purpose of each scheduler:
         -------
         None.
 
-    correct argument precedence in a function
+correct argument precedence in a function
+
     >>> def target(a, b=1, *args, **kwargs):
             print(a, b, args, kwargs)
       
-    Add 2 functions to be executed on the same time
+Add 2 functions to be executed on the same time
+
     >>> event_scheduler.add_job(target= target,
                                 args = (0,), # ... use "," for single arguments
                                 kwargs = {"b":2},
@@ -84,14 +86,14 @@ Purpose of each scheduler:
                                 tz = "Asia/Kolkata")
     >>> event_scheduler.run()
         
-Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
-0 2 () {}
-Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
-0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
-Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
-0 2 () {}
-Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
-0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}      
+ Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+ 0 2 () {}
+ Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+ 0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
+ Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+ 0 2 () {}
+ Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+ 0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}      
 
 ### Using only recurrent_scheduler:
     >>> from time import sleep
