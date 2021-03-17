@@ -97,6 +97,26 @@ Add above target function twice. Each function would be called on timestamps
         0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
 
 #### Using only recurrent_scheduler
+
+    >>> print(recurring_scheduler.add_job.__doc__)
+
+        Assigns an periodic task to a process.
+
+        Parameters
+        ----------
+        target : a callable function
+        period_in_seconds : int
+            the time period in seconds to execute this function
+        args : tuple(object,), optional
+            un-named argumets for the "target" callable
+            the default is ()
+        kwargs : dict{key:object}, optional
+            named argumets for the "target" callable
+            the default is {}
+
+        Returns
+        -------
+        None.
     >>> from time import sleep
     >>> def wait(t):
             sleep(t)
@@ -126,6 +146,13 @@ But, is being called every 5-seconds.
 from time import sleep
 from simple_scheduler.event import event_scheduler
 from simple_scheduler.recurring import recurring_scheduler
+
+print(event_scheduler.__doc__)
+print(event_scheduler.add_job.__doc__)
+print()
+print(recurring_scheduler.__doc__)
+print(recurring_scheduler.add_job.__doc__)
+print()
 
 # Select your timezone
 recurring_scheduler.timezones()
