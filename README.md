@@ -114,7 +114,8 @@ Add above target function twice. Each function would be called on timestamps
         Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
 
 ### Note:
-The function-wait() executes in 10 seconds but is called every 5-seconds.
+The execution time of above "wait"-function is 10 seconds.
+But is being called every 5-seconds!
 
 ## Toggle verbose:
 
