@@ -34,7 +34,7 @@ class Event(Schedule):
             minute_ = int(datetime.now(timezone(tz)).time().minute)
             if (hour_ == hour) & (minute_ == minute):
                 self._print(f"{ctime(time())} :: {function.__qualname__}" +\
-                            f" [event @{hour}:{minute} | {tz} time]")
+                            f" [event @{hour}:{minute} | {tz}]")
                 print()
                 for tries in range(3): # number of attempts for any job
                     try:
@@ -90,3 +90,5 @@ class Event(Schedule):
             self._processes.append(Process(target=self._schedule,
                                            name = function.__qualname__,
                                            args=(function, tz, hour, minute)))
+
+event_scheduler = Event(verbose=True)

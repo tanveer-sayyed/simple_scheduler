@@ -32,6 +32,5 @@ class Schedule():
             return function
         except TypeError:
             self._processes = []
-            raise Exception("add_event/add_recurring function "+\
-                            "not properly called. Please see:\n" +\
-                            "\tadd_event.__doc__   OR\n\tadd_recuring.__doc__")
+            raise Exception(".add_job(...) method not properly called."+\
+                            " Please see:\n\t.add_job.__doc__ ")

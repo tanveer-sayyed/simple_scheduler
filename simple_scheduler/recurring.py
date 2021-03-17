@@ -68,49 +68,5 @@ class Recurring(Schedule):
         self._processes.append(Process(target=self._schedule,
                                        name = function.__qualname__,
                                        args=(function, period_in_seconds)))
+
 recurring_scheduler = Recurring(verbose=True)
-
-# def call_me(f, z="ZZZZZZZZ", *args, **kwargs):
-#     print(f ,z, args, kwargs)
-    
-# def f():
-#     print("....")
-    
-# # correct function definition
-# def my_function(a, b, *args, **kwargs):
-#     pass
-
-# event_scheduler = Event(verbose=True)
-
-
-# # event_scheduler.add_event(function_with_parameters=(call_me, 5, 6),
-# #                             tz="Asia/Kolkata",
-# #                             when=["12:49","aa:48"])
-# # print(event_scheduler.add_event.__doc__)
-# # event_scheduler.run()
-
-# recurring_scheduler = Recurring(True)
-# recurring_scheduler.verbose = False
-# recurring_scheduler.add_recurring(target = call_me,
-#                                   kwargs={"f":"FFFF", "b":"BBBB"},
-#                                   period_in_seconds=1)
-# recurring_scheduler.add_recurring(target = call_me,
-#                                   args=("FFFF",),
-#                                   period_in_seconds=1)
-# recurring_scheduler.add_recurring(target = call_me,
-#                                   args=("FFFF","ZZZZ"),
-#                                   kwargs={"b":"BBBB"},
-#                                   period_in_seconds=1)
-# recurring_scheduler.add_recurring(target = call_me,
-#                                   args=("FFFF","ZZZZ","NNNNNN"),
-#                                   kwargs={"b":"BBBB"},
-#                                   period_in_seconds=1)
-# recurring_scheduler.add_recurring(target = f,
-#                                   period_in_seconds=1,
-#                                   )
-# recurring_scheduler.add_recurring(target = call_me,
-#                                   period_in_seconds=3,
-#                                   kwargs={"b":3, "z":"AAAA"},
-#                                   args=(1,2,3,4,5))
-
-# recurring_scheduler.run()
