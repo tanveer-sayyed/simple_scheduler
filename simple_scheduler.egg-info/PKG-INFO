@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: simple-scheduler
+Version: 1.0.0
+Summary: Easily schedule multiple events and recurring tasks (simultaneously).
+Home-page: https://github.com/Vernal-Inertia/simple_scheduler
+Author: Vernal Inertia
+Author-email: tanveer2407@gmail.com
+License: MIT
+Description: # simple_scheduler
+        Easily schedule multiple events and recurring tasks (simultaneously).
+        The package uses a 24-hour clock.
+        
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 3 - Alpha
+Description-Content-Type: text/markdown

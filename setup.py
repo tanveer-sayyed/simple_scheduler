@@ -1,3 +1,7 @@
+"""
+    https://pythonhosted.org/an_example_pypi_project/setuptools.html
+"""
+
 import pathlib
 from setuptools import setup
 
@@ -22,13 +26,14 @@ setup(
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
+        "Development Status :: 3 - Alpha"
     ],
     packages=["simple_scheduler"],
     include_package_data=True,
-    install_requires=["multiprocessing"],
+    install_requires=["pytz"],
     entry_points={
         "console_scripts": [
-            "simple_scheduler=__main__:main",
+            "Vernal-Inertia=simple_scheduler.__main__:main",
         ]
     },
 )
