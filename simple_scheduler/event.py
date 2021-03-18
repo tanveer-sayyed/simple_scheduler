@@ -13,7 +13,7 @@ class Event(Schedule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _schedule(self, function, tz, hour, minute):
+    def _schedule(self, function, tz, when):
         """
         Parameters
         ----------
@@ -30,9 +30,11 @@ class Event(Schedule):
         None.
         """
         while True:
-            hour_ = int(datetime.now(timezone(tz)).time().hour)
-            minute_ = int(datetime.now(timezone(tz)).time().minute)
-            if (hour_ == hour) & (minute_ == minute):
+            hour = int(datetime.now(timezone(tz)).time().hour)
+            minute = int(datetime.now(timezone(tz)).time().minute)
+            print(f"{hour}:{minute}", when)
+            if f"{hour}:{minute}" in when:
+            # if (hour_ == hour) & (minute_ == minute):
                 self._print(f"{ctime(time())} :: {function.__qualname__}" +\
                             f" [event @{hour}:{minute} | {tz}]")
                 for tries in range(3): # number of attempts for any job
@@ -80,16 +82,16 @@ class Event(Schedule):
 
         """
         function = self._manifest_function(target, args, kwargs)
-        for hour_minute in when:
-            try:
-                hour = int(hour_minute.split(":")[0])
-                minute = int(hour_minute.split(":")[1])
-            except ValueError:
-                self._processes = []
-                raise Exception('Elements of "when" (list) must be ' +\
-                                '["int:int", "int:int", ...]')
-            self._processes.append(Process(target=self._schedule,
-                                           name = function.__qualname__,
-                                           args=(function, tz, hour, minute)))
+        try:
+            [int(x.split(":")[0]) for x in when]
+            [int(x.split(":")[1]) for x in when]
+        except ValueError:
+            raise Exception('Elements of "when" (list) must be ' +\
+                            '["int:int", "int:int", ...]')
+        print("step 1")
+        print(function, tz, when)
+        self._processes.append(Process(target=self._schedule,
+                                       name = function.__qualname__,
+                                       args=(function, tz, when)))
 
 event_scheduler = Event(verbose=True)
