@@ -14,8 +14,7 @@ class Recurring(Schedule):
         """
         Parameters
         ----------
-        function : callable function{ctime(time())}
-            name of the function which needs to be scheduled
+        function : a callable function
         period_in_seconds : int
             the time period in seconds
 
@@ -31,7 +30,7 @@ class Recurring(Schedule):
                     if not x.is_alive():
                         x.join()
                         self._workers.remove(x)
-                sleep(round(s - time()))
+                sleep(s - time())
                 p = Process(target = function)
                 p.start()
                 self._workers.append(p)
