@@ -74,9 +74,9 @@ correct argument precedence in a function
             print(a, b, args, kwargs)
       
 Add above target function twice. Each function would be called on timestamps
-(hour:minute) mentioned in list WHEN.
+(day|HH:MM) mentioned in list WHEN. ["*": all days]
 
-    >>> WHEN = ["16:55", "16:56"]
+    >>> WHEN = ["wed|16:55", "*/16:56"]
     >>> TZ = "Asia/Kolkata"
     >>> event_scheduler.add_job(target= target,
                                 args = (0,), # ... use "," for single arguments
@@ -90,13 +90,13 @@ Add above target function twice. Each function would be called on timestamps
                                 when = WHEN,
                                 tz = TZ)
     >>> event_scheduler.run()
-        Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+        Wed Mar 17 16:55:32 2021 :: target [event @wed|16:55|Asia/Kolkata]
         0 2 () {}
-        Wed Mar 17 16:55:32 2021 :: target [event @16:55 | Asia/Kolkata]
+        Wed Mar 17 16:55:32 2021 :: target [event @wed|16:55|Asia/Kolkata]
         0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
-        Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+        Wed Mar 17 16:56:27 2021 :: target [event @wed|16:56|Asia/Kolkata]
         0 2 () {}
-        Wed Mar 17 16:56:27 2021 :: target [event @16:56 | Asia/Kolkata]
+        Wed Mar 17 16:56:27 2021 :: target [event @wed|16:56|Asia/Kolkata]
         0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
 
 #### Using only recurrent_scheduler
