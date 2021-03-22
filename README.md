@@ -160,6 +160,7 @@ print()
 # Select your timezone
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
+# use today's day [mon/tue/wed/thu/fri/sat/sun]
 WHEN = ["wed|17:26", "*|17:27"] # 1-min difference, "*" for all days
 
 # correct argument precedence in a function
