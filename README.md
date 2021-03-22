@@ -74,9 +74,9 @@ correct argument precedence in a function
             print(a, b, args, kwargs)
       
 Add above target function twice. Each function would be called on timestamps
-(day|HH:MM) mentioned in list WHEN. ["*": all days]
+(day|HH:MM) mentioned in list WHEN.
 
-    >>> WHEN = ["wed|16:55", "*|16:56"]
+    >>> WHEN = ["wed|16:55", "*|16:56"] # "*" --> all days
     >>> TZ = "Asia/Kolkata"
     >>> event_scheduler.add_job(target= target,
                                 args = (0,), # ... use "," for single arguments
@@ -170,8 +170,8 @@ def wait(t):
     sleep(t)
     print(f"I waited {t} seconds")
 
-event_scheduler.add_job(target= target,
-                        args = (0,), # ... use "," for single arguments
+event_scheduler.add_job(target = target,
+                        args = (0,),   # don't forget "," for single arguments
                         kwargs = {"b":2},
                         when = WHEN,
                         tz = TZ)
