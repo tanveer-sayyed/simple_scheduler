@@ -43,10 +43,11 @@ Purpose of each scheduler:
         target : a callable function
         tz : str
             time zone (call the method .timezones() for more info)
-        when : list(str)
+        when : list, a collection of "day|HH:MM"
             at what precise time(s) should the function be called
-            eg. ["12:34","23:45", ...] --> please "only" use 24-hour clock,
-                                           with ":" as separator
+            eg. ["mon|22:04","sat|03:45", ...] please "only" use 24-hour
+                                               clock with "|" as day separator
+                                               and ":" as time separator
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
@@ -58,8 +59,10 @@ Purpose of each scheduler:
         ------
         Exception
             - If time (in "when"-list) is not a collection of "int:int"
-              eg. ["12:30am","2:30 pm", ...] --> please "only" use 24-hour clock,
-                                                 with ":" as separator
+            eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
+                                                   clock, with "|" as day
+                                                   separator and ":" as time
+                                                   separator
 
         Returns
         -------

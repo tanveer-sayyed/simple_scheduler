@@ -14,7 +14,7 @@ class Schedule():
 
     def _print(self, message):
         if self.verbose:
-            print(message)
+            print(); print(message)
 
     def run(self):
         try:

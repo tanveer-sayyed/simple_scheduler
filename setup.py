@@ -22,6 +22,7 @@ setup(
     author="Vernal Inertia",
     author_email="tanveer2407@gmail.com",
     license="MIT",
+    keywords='python, schedule, simple',
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
@@ -30,4 +31,9 @@ setup(
     packages=["simple_scheduler"],
     include_package_data=True,
     install_requires=["pytz"],
+    python_requires='>=3',
+    project_urls={
+        'Issues': 'https://github.com/Vernal-Inertia/simple_scheduler/issues',
+        'Documentation': 'https://github.com/Vernal-Inertia/simple_scheduler/blob/main/README.md',
+        'Source': 'https://github.com/Vernal-Inertia/simple_scheduler'}
 )

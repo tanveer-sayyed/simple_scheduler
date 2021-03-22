@@ -1,4 +1,6 @@
+LICENSE
 README.md
+setup.cfg
 setup.py
 simple_scheduler/__init__.py
 simple_scheduler/base.py

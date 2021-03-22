@@ -6,6 +6,9 @@ Home-page: https://github.com/Vernal-Inertia/simple_scheduler
 Author: Vernal Inertia
 Author-email: tanveer2407@gmail.com
 License: MIT
+Project-URL: Issues, https://github.com/Vernal-Inertia/simple_scheduler/issues
+Project-URL: Documentation, https://github.com/Vernal-Inertia/simple_scheduler/blob/main/README.md
+Project-URL: Source, https://github.com/Vernal-Inertia/simple_scheduler
 Description: # simple_scheduler
         - Uses multiprocessing.
         - The package uses a 24-hour clock, only.
@@ -51,10 +54,11 @@ Description: # simple_scheduler
                 target : a callable function
                 tz : str
                     time zone (call the method .timezones() for more info)
-                when : list(str)
+                when : list, a collection of "day|HH:MM"
                     at what precise time(s) should the function be called
-                    eg. ["12:34","23:45", ...] --> please "only" use 24-hour clock,
-                                                   with ":" as separator
+                    eg. ["mon|22:04","sat|03:45", ...] please "only" use 24-hour
+                                                       clock with "|" as day separator
+                                                       and ":" as time separator
                 args : tuple(object,), optional
                     un-named argumets for the "target" callable
                     the default is ()
@@ -66,8 +70,10 @@ Description: # simple_scheduler
                 ------
                 Exception
                     - If time (in "when"-list) is not a collection of "int:int"
-                      eg. ["12:30am","2:30 pm", ...] --> please "only" use 24-hour clock,
-                                                         with ":" as separator
+                    eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
+                                                           clock, with "|" as day
+                                                           separator and ":" as time
+                                                           separator
         
                 Returns
                 -------
@@ -192,8 +198,10 @@ Description: # simple_scheduler
         event_scheduler.run()
         recurring_scheduler.run()
         ```
+Keywords: python,schedule,simple
 Platform: UNKNOWN
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Development Status :: 3 - Alpha
+Requires-Python: >=3
 Description-Content-Type: text/markdown
