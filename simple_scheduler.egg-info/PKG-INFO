@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: simple-scheduler
-Version: 1.0.0
+Version: 1.0.1
 Summary: Easily schedule multiple events and recurring tasks (simultaneously).
 Home-page: https://github.com/Vernal-Inertia/simple_scheduler
 Author: Vernal Inertia
