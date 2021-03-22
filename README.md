@@ -158,9 +158,9 @@ print(recurring_scheduler.add_job.__doc__)
 print()
 
 # Select your timezone
-recurring_scheduler.timezones()
+event_scheduler.timezones()
 TZ = "Asia/Kolkata"
-WHEN = ["17:26", "17:27"], # 1-min difference
+WHEN = ["wed|17:26", "*/17:27"], # 1-min difference, "*" for all days
 
 # correct argument precedence in a function
 def target(a, b=1, *args, **kwargs):
