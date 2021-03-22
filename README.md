@@ -76,7 +76,7 @@ correct argument precedence in a function
 Add above target function twice. Each function would be called on timestamps
 (day|HH:MM) mentioned in list WHEN. ["*": all days]
 
-    >>> WHEN = ["wed|16:55", "*/16:56"]
+    >>> WHEN = ["wed|16:55", "*|16:56"]
     >>> TZ = "Asia/Kolkata"
     >>> event_scheduler.add_job(target= target,
                                 args = (0,), # ... use "," for single arguments
@@ -160,7 +160,7 @@ print()
 # Select your timezone
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
-WHEN = ["wed|17:26", "*/17:27"], # 1-min difference, "*" for all days
+WHEN = ["wed|17:26", "*|17:27"], # 1-min difference, "*" for all days
 
 # correct argument precedence in a function
 def target(a, b=1, *args, **kwargs):
