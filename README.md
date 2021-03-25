@@ -2,8 +2,8 @@
 - Uses multiprocessing.
 - The package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
-- A job would be called any time within the 60-seconds[0-59] of a minute. This
-  package does not begin execution of a job at the 0th-second of the minute.
+- Recurring jobs would be precisely sheduled.
+- Event jobs would be executed anytime within the minute.
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
