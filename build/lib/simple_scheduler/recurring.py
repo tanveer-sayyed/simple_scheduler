@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from time import sleep, time, ctime
+from time import time, ctime
 
 from simple_scheduler.base import Schedule
 
@@ -25,12 +25,7 @@ class Recurring(Schedule):
         """
         while True:
             try:
-                s = time() + period_in_seconds
-                for x in self._workers:
-                    if not x.is_alive():
-                        x.join()
-                        self._workers.remove(x)
-                sleep(s - time())
+                self._sleep(period_in_seconds=period_in_seconds)
                 p = Process(target = function)
                 p.start()
                 self._workers.append(p)

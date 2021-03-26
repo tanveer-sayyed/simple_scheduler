@@ -12,13 +12,6 @@ class Event(Schedule):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__days = {0:"mon",
-                       1:"tue",
-                       2:"wed",
-                       3:"thu",
-                       4:"fri",
-                       5:"sat",
-                       6:"sun"}
 
     def _schedule(self, function, tz, when):
         """
@@ -45,14 +38,14 @@ class Event(Schedule):
                 for tries in range(3): # number of attempts for any job
                     try:
                         function()
-                        sleep(60) # prevent re-execution of small jobs
+                        self._sleep(period_in_seconds=60)
                         break
                     except Exception as e:
                         self._print(str(e))
-                        sleep(10)
+                        self._sleep(period_in_seconds=10)
                         continue
             else:
-                sleep(55)
+                self._sleep(period_in_seconds=55)
 
     def add_job(self, target, tz, when, args=(), kwargs={}):
         """
