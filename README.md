@@ -1,9 +1,9 @@
 # simple_scheduler
-- Uses multiprocessing.
-- The package uses a 24-hour clock, only.
+- Uses multiprocessing to schedule light jobs.
+- This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
-- Recurring jobs would be precisely sheduled.
-- Event jobs would be executed anytime within the minute.
+- Recurring jobs to be precisely sheduled.
+- Event jobs to be executed within the minute.
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
@@ -13,7 +13,7 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    Copy-paste the code at the bottom and run.
+    See examples folder.
     
 ### Long
 There are two different schedulers:
@@ -143,48 +143,3 @@ But, is being called every 5-seconds.
 
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
-    
-## Complete code:
-```
-from time import sleep
-from simple_scheduler.event import event_scheduler
-from simple_scheduler.recurring import recurring_scheduler
-
-print(event_scheduler.__doc__)
-print(event_scheduler.add_job.__doc__)
-print()
-print(recurring_scheduler.__doc__)
-print(recurring_scheduler.add_job.__doc__)
-print()
-
-# Select your timezone
-event_scheduler.timezones()
-TZ = "Asia/Kolkata"
-# use today's day [mon/tue/wed/thu/fri/sat/sun]
-WHEN = ["wed|17:26", "*|17:27"] # 1-min difference, "*" for all days
-
-# correct argument precedence in a function
-def target(a, b=1, *args, **kwargs):
-    print(a, b, args, kwargs)
-    
-def wait(t):
-    sleep(t)
-    print(f"I waited {t} seconds")
-
-event_scheduler.add_job(target = target,
-                        args = (0,),   # don't forget "," for single arguments
-                        kwargs = {"b":2},
-                        when = WHEN,
-                        tz = TZ)
-event_scheduler.add_job(target= target,
-                        args = (0, 2, "arg1", "arg2"),
-                        kwargs = {"key1":"value1",
-                                  "key2":"value2"},
-                        when = WHEN,
-                        tz = TZ)
-recurring_scheduler.add_job(target=wait,
-                            kwargs={"t":10},     # The function-wait() executes in 10 seconds
-                            period_in_seconds=5) # but is called every 5-seconds.
-event_scheduler.run()
-recurring_scheduler.run()
-```

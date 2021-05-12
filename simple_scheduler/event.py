@@ -1,7 +1,7 @@
 from pytz import timezone
+from time import time, ctime
 from datetime import datetime
 from multiprocessing import Process
-from time import sleep, time, ctime
 
 from simple_scheduler.base import Schedule
 
@@ -31,7 +31,7 @@ class Event(Schedule):
         """
         while True:
             HH_MM = str(datetime.now(timezone(tz)).time()).rsplit(":",1)[0]
-            day = self.__days[datetime.today().weekday()]
+            day = self._days[datetime.today().weekday()]
             if (f"{day}|{HH_MM}" in when) | (f"*|{HH_MM}" in when):
                 self._print(f"{ctime(time())} :: {function.__qualname__}" +\
                             f" [event @{day}|{HH_MM}|{tz}]")

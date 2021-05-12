@@ -1,5 +1,5 @@
-from multiprocessing import Process
 from time import time, ctime
+from multiprocessing import Process
 
 from simple_scheduler.base import Schedule
 

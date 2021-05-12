@@ -9,7 +9,7 @@ class Schedule():
         self._processes = []
         self._workers = []
         self.verbose = verbose
-        self.__days = {0:"mon",
+        self._days = {0:"mon",
                1:"tue",
                2:"wed",
                3:"thu",
