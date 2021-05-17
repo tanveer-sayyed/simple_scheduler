@@ -5,16 +5,13 @@
 import pathlib
 from setuptools import setup
 
-# The directory containing this file
-HERE = pathlib.Path(__file__).parent
+HERE = pathlib.Path(__file__).parent # The directory containing this file
 
-# The text of the README file
 print(HERE)
 README = (HERE / "README.md").read_text()
-# This call to setup() does all the work
 setup(
     name="simple_scheduler",
-    version="1.0.3",
+    version="1.0.5",
     description="Easily schedule multiple events and recurring tasks (simultaneously).",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -30,9 +27,10 @@ setup(
     ],
     packages=["simple_scheduler"],
     include_package_data=True,
-    install_requires=["pytz"],
+    install_requires=["multiprocess","pytz"],
     python_requires='>=3',
     project_urls={
+        'Examples':'https://github.com/Vernal-Inertia/simple_scheduler/examples',
         'Issues': 'https://github.com/Vernal-Inertia/simple_scheduler/issues',
         'Documentation': 'https://github.com/Vernal-Inertia/simple_scheduler/blob/main/README.md',
         'Source': 'https://github.com/Vernal-Inertia/simple_scheduler'}

@@ -1,5 +1,5 @@
 from time import time, ctime
-from multiprocessing import Process
+from multiprocess import Process
 
 from simple_scheduler.base import Schedule
 
@@ -29,7 +29,7 @@ class Recurring(Schedule):
                 p = Process(target = function)
                 p.start()
                 self._workers.append(p)
-                self._print(f"{ctime(time())} :: {function.__qualname__}"+\
+                self._print(f"{ctime(time())} :: {function.func.__qualname__}"+\
                             f" [recurring | {period_in_seconds}-second(s)]")
             except Exception as e:
                 self._print(str(e))
@@ -60,7 +60,7 @@ class Recurring(Schedule):
         """
         function = self._manifest_function(target, args, kwargs)
         self._processes.append(Process(target=self._schedule,
-                                       name = function.__qualname__,
+                                       name = function.func.__qualname__,
                                        args=(function, period_in_seconds)))
 
 recurring_scheduler = Recurring(verbose=True)

@@ -3,12 +3,12 @@ from simple_scheduler.event import event_scheduler
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
 # day -> [mon/tue/wed/thu/fri/sat/sun]
-WHEN = ["sat|15:05", "*|15:06"] #"*" for all days, 1-min difference
+WHEN = ["mon|10:29", "*|10:30"] #"*" for all days, 1-min difference
 
 # correct argument precedence in a function
 def target(a, b=1, *args, **kwargs):
     print(a, b, args, kwargs)
-    
+
 event_scheduler.add_job(target = target,
                         args = (0,), # don't forget "," for single arguments
                         kwargs = {"b":2},

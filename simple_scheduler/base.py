@@ -4,7 +4,7 @@ from pytz import all_timezones
 
 class Schedule():
     """ The parent of "event" and "recurring" classes."""
-    
+
     def __init__(self, verbose=False):
         self._processes = []
         self._workers = []
@@ -45,7 +45,7 @@ class Schedule():
         """
         if self.verbose:
             print(); print(message)
-            
+
     def _sleep(self, period_in_seconds):
         """
         Resourceful sleep
@@ -65,7 +65,7 @@ class Schedule():
                 x.join()
                 self._workers.remove(x)
         sleep(s - time())
-            
+
     def run(self):
         """
         Spawns tasks simultaneously.
@@ -104,8 +104,8 @@ class Schedule():
         """
         try:
             function = partial(target, *args, **kwargs)
-            function.__qualname__ = target.__qualname__
-            function.__doc__ = target.__doc__
+            # function.__qualname__ = target.__qualname__
+            # function.__doc__ = target.__doc__
             return function
         except:
             self._processes = []
