@@ -79,7 +79,7 @@ class Schedule():
             if self._processes:
                 [process.start() for process in self._processes]
         except:
-            [process.terminate for process in self._processes]
+            self.stop()
             pass
 
     def _manifest_function(self, target, args, kwargs):
@@ -110,3 +110,21 @@ class Schedule():
         except:
             self._processes = []
             raise
+            
+    def clear(self):
+        """
+        Stops all jobs as well as clears them from the schedule.
+
+        Returns
+        -------
+        None.
+
+        """
+        while self._processes != []:
+            try:
+                for x in self._processes:
+                    if x.is_alive():
+                        x.terminate()
+                        self._processes.remove(x)
+            except:
+                pass
