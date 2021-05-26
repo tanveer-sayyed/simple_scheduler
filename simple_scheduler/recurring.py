@@ -1,4 +1,3 @@
-from time import time, ctime
 from multiprocess import Process
 
 from simple_scheduler.base import Schedule
@@ -29,15 +28,14 @@ class Recurring(Schedule):
                 p = Process(target = function)
                 p.start()
                 self._workers.append(p)
-                self._print(f"{ctime(time())} :: {function.func.__qualname__}"+\
-                            f" [recurring | {period_in_seconds}-second(s)]")
             except Exception as e:
                 self._print(str(e))
                 [p.terminate for p in self._workers]
                 self._workers = []
                 pass
 
-    def add_job(self, target, period_in_seconds, args=(), kwargs={}):
+    def add_job(self, target, period_in_seconds, job_name=None, args=(),
+                kwargs={}):
         """
         Assigns an periodic task to a process.
 
@@ -46,6 +44,9 @@ class Recurring(Schedule):
         target : a callable function
         period_in_seconds : int
             the time period in seconds to execute this function
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
@@ -58,9 +59,15 @@ class Recurring(Schedule):
         None.
 
         """
-        function = self._manifest_function(target, args, kwargs)
-        self._processes.append(Process(target=self._schedule,
-                                       name = function.func.__qualname__,
-                                       args=(function, period_in_seconds)))
+        function, job_name = self._manifest_function(target,
+                                                     job_name,
+                                                     args,
+                                                     kwargs)
+        self._jobs[job_name] = [f"{job_name} "+\
+                               f"[recurring | {period_in_seconds}-second(s)]"]
+        p = Process(target=self._schedule,
+                    name = job_name,
+                    args=(function, period_in_seconds))
+        self._processes.append(p)
 
 recurring_scheduler = Recurring(verbose=True)

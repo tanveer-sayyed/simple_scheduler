@@ -1,9 +1,11 @@
 # simple_scheduler
-- Uses multiprocessing to schedule light jobs.
+- Does not miss future events.
+- Uses multiprocessing to schedule jobs.
 - This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
 - Recurring jobs to be precisely sheduled.
 - Event jobs to be executed within the minute.
+- Long jobs to be executed even if previous call(s) is(are) still running.
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
@@ -13,25 +15,25 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    See examples folder.
-    
+    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples) folder.
+
 ### Long
 There are two different schedulers:
 
     >>> from simple_scheduler.event import event_scheduler    
     >>> from simple_scheduler.recurring import recurring_scheduler
-    
+
 Purpose of each scheduler:
 
     >>> print(event_scheduler.__doc__)
      Event occurs at an exact time.
         e.g. scirpt_1 is called at 14:00 and 20:00
         Each event is tried 3-times (but executed only once).
-        
+
     >>> print(recurring_scheduler.__doc__)
      Recurring tasks are those that occur after every "x"-seconds.
         (e.g. script_1 is called every 600 seconds)
-        
+
 #### Using only event_scheduler
 
     >>> print(event_scheduler.add_job.__doc__)
@@ -45,9 +47,12 @@ Purpose of each scheduler:
             time zone (call the method .timezones() for more info)
         when : list, a collection of "day|HH:MM"
             at what precise time(s) should the function be called
-            eg. ["mon|22:04","sat|03:45", ...] please "only" use 24-hour
-                                               clock with "|" as day separator
-                                               and ":" as time separator
+            eg. ["mon|22:04","*|03:45", ...] please "only" use 24-hour
+                                             clock with "|" as day separator
+                                             and ":" as time separator
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
@@ -58,7 +63,7 @@ Purpose of each scheduler:
         Raises
         ------
         Exception
-            - If time (in "when"-list) is not a collection of "int:int"
+            - If time (in "when"-list) is not a collection of "day|HH:MM"
             eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                    clock, with "|" as day
                                                    separator and ":" as time
@@ -68,36 +73,7 @@ Purpose of each scheduler:
         -------
         None.
 
-correct argument precedence in a function
-
-    >>> def target(a, b=1, *args, **kwargs):
-            print(a, b, args, kwargs)
-      
-Add above target function twice. Each function would be called on timestamps
-(day|HH:MM) mentioned in list WHEN.
-
-    >>> WHEN = ["wed|16:55", "*|16:56"] # "*" --> all days
-    >>> TZ = "Asia/Kolkata"
-    >>> event_scheduler.add_job(target= target,
-                                args = (0,), # ... use "," for single arguments
-                                kwargs = {"b":2},
-                                when = WHEN,
-                                tz = TZ)
-    >>> event_scheduler.add_job(target= target,
-                                args = (0, 2, "arg1", "arg2"),
-                                kwargs = {"key1":"value1",
-                                          "key2":"value2"},
-                                when = WHEN,
-                                tz = TZ)
-    >>> event_scheduler.run()
-        Wed Mar 17 16:55:32 2021 :: target [event @wed|16:55|Asia/Kolkata]
-        0 2 () {}
-        Wed Mar 17 16:55:32 2021 :: target [event @wed|16:55|Asia/Kolkata]
-        0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
-        Wed Mar 17 16:56:27 2021 :: target [event @wed|16:56|Asia/Kolkata]
-        0 2 () {}
-        Wed Mar 17 16:56:27 2021 :: target [event @wed|16:56|Asia/Kolkata]
-        0 2 ('arg1', 'arg2') {'key1': 'value1', 'key2': 'value2'}
+See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/event.py)
 
 #### Using only recurrent_scheduler
 
@@ -113,6 +89,9 @@ Add above target function twice. Each function would be called on timestamps
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name            
         kwargs : dict{key:object}, optional
             named argumets for the "target" callable
             the default is {}
@@ -120,26 +99,24 @@ Add above target function twice. Each function would be called on timestamps
         Returns
         -------
         None.
-    >>> from time import sleep
-    >>> def wait(t):
-            sleep(t)
-            print(f"I waited {t} seconds")
-    >>> recurring_scheduler.add_job(target=wait,
-                                kwargs={"t":10},
-                                period_in_seconds=5)
-    >>> recurring_scheduler.run()
-        Wed Mar 17 17:14:30 2021 :: wait [recurring | 5-second(s)]
-        Wed Mar 17 17:14:35 2021 :: wait [recurring | 5-second(s)]
-        I waited 10 seconds
-        Wed Mar 17 17:14:40 2021 :: wait [recurring | 5-second(s)]
-        I waited 10 seconds
-        Wed Mar 17 17:14:45 2021 :: wait [recurring | 5-second(s)]
 
-#### Note
-The execution time of above "wait"-function is 10 seconds.
-But, is being called every 5-seconds.
+See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/recurring.py)
 
 ### Toggle verbose
-
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
+
+### Job summary
+See a summary of jobs[job_name] scheduled with associated process ids.
+    >>> event_scheduler.job_summary()
+    >>> recurring_scheduler.job_summary()
+
+### Remove jobs
+Remove future jobs that are no longer required to be scheduled.
+    >>> event_scheduler.remove_job(job_name)
+    >>> recurring_scheduler.remove_job(job_name)
+    
+### Clear schedule
+Stop all future jobs and clear the schedule
+    >>> event_scheduler.clear()
+    >>> recurring_scheduler.clear()

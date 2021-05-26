@@ -9,13 +9,26 @@ class Schedule():
         self._processes = []
         self._workers = []
         self.verbose = verbose
-        self._days = {0:"mon",
-               1:"tue",
-               2:"wed",
-               3:"thu",
-               4:"fri",
-               5:"sat",
-               6:"sun"}
+        self._days = {
+            0:"mon",
+            1:"tue",
+            2:"wed",
+            3:"thu",
+            4:"fri",
+            5:"sat",
+            6:"sun"
+            }
+        self._jobs = {}
+
+    def job_summary(self):
+        self._print("\tScheduled jobs:")
+        for _, name in enumerate(self._jobs):
+            msg = f"{self._jobs[name][0]}"
+            try:
+                msg += f" running in {self._jobs[name][1]}"
+            except:
+                pass
+            self._print(msg)
 
     def timezones(self):
         """
@@ -44,7 +57,7 @@ class Schedule():
 
         """
         if self.verbose:
-            print(); print(message)
+            print(message)
 
     def _sleep(self, period_in_seconds):
         """
@@ -77,12 +90,14 @@ class Schedule():
         """
         try:
             if self._processes:
-                [process.start() for process in self._processes]
+                [p.start() for p in self._processes]
+                for p in self._processes:
+                    self._jobs[p.name].append(p.pid)
         except:
-            self.stop()
+            [p.terminate() for p in self._processes]
             pass
 
-    def _manifest_function(self, target, args, kwargs):
+    def _manifest_function(self, target, job_name, args, kwargs):
         """
         Wraps the function in its own
         parameters for future execution.
@@ -104,13 +119,57 @@ class Schedule():
         """
         try:
             function = partial(target, *args, **kwargs)
-            # function.__qualname__ = target.__qualname__
-            # function.__doc__ = target.__doc__
-            return function
+            name = job_name if job_name else target.__qualname__
+            function.func.__qualname__ = name
+            return function, name
         except:
             self._processes = []
             raise
-            
+
+    def remove_job(self, job_name):
+        """
+        Remove job from schedule by providing job_name
+
+        Parameters
+        ----------
+        job_name : str
+            Name of the job assigend to argument "job_name" while adding job
+
+        Returns
+        -------
+        None.
+
+        """
+        remove_jobs = [p for p in self._processes if p.name == job_name]
+        if remove_jobs:
+            for p in remove_jobs:
+                self._remove_job(p)
+            self.job_summary()
+        else:
+            self._print("No such job_name exists.")
+
+    def _remove_job(self, remove_this_job):
+        """
+        Helper function.
+
+        Parameters
+        ----------
+        remove_this_job : instance of multiprocess.Process
+
+        Returns
+        -------
+        None.
+
+        """
+        try:
+            if remove_this_job.is_alive():
+                self._print(f"Removed job: {remove_this_job.name}")
+                remove_this_job.terminate()
+                self._processes.remove(remove_this_job)
+                self._jobs.pop(remove_this_job.name)
+        except:
+            raise
+
     def clear(self):
         """
         Stops all jobs as well as clears them from the schedule.
@@ -120,11 +179,9 @@ class Schedule():
         None.
 
         """
-        while self._processes != []:
-            try:
-                for x in self._processes:
-                    if x.is_alive():
-                        x.terminate()
-                        self._processes.remove(x)
-            except:
-                pass
+        for p in self._processes:
+            self._remove_job(p)
+        # in case a process is still alive do the following
+        for p in [p for p in self._processes if p.is_alive()]:
+            self._remove_job(p)
+        self.job_summary()

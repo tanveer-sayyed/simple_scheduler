@@ -1,5 +1,4 @@
 from pytz import timezone
-from time import time, ctime
 from datetime import datetime
 from multiprocess import Process
 
@@ -33,8 +32,6 @@ class Event(Schedule):
             HH_MM = str(datetime.now(timezone(tz)).time()).rsplit(":",1)[0]
             day = self._days[datetime.today().weekday()]
             if (f"{day}|{HH_MM}" in when) | (f"*|{HH_MM}" in when):
-                self._print(f"{ctime(time())} :: {function.func.__qualname__}" +\
-                            f" [event @{day}|{HH_MM}|{tz}]")
                 for tries in range(3): # number of attempts for any job
                     try:
                         function()
@@ -47,7 +44,7 @@ class Event(Schedule):
             else:
                 self._sleep(period_in_seconds=55)
 
-    def add_job(self, target, tz, when, args=(), kwargs={}):
+    def add_job(self, target, tz, when, job_name=None, args=(), kwargs={}):
         """
         Assigns an event to a process.
 
@@ -58,9 +55,12 @@ class Event(Schedule):
             time zone (call the method .timezones() for more info)
         when : list, a collection of "day|HH:MM"
             at what precise time(s) should the function be called
-            eg. ["mon|22:04","sat|03:45", ...] please "only" use 24-hour
-                                               clock with "|" as day separator
-                                               and ":" as time separator
+            eg. ["mon|22:04","*|03:45", ...] please "only" use 24-hour
+                                             clock with "|" as day separator
+                                             and ":" as time separator
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
@@ -71,7 +71,7 @@ class Event(Schedule):
         Raises
         ------
         Exception
-            - If time (in "when"-list) is not a collection of "int:int"
+            - If time (in "when"-list) is not a collection of "day|HH:MM"
             eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                    clock, with "|" as day
                                                    separator and ":" as time
@@ -82,7 +82,6 @@ class Event(Schedule):
         None.
 
         """
-        function = self._manifest_function(target, args, kwargs)
         when = [w.lower() for w in when]
         try:
             [int(x.split(":")[0].split("|")[1]) for x in when]
@@ -90,8 +89,13 @@ class Event(Schedule):
         except:
             raise Exception('Elements of "when" (list) must be a collection' +\
                             'of ["day|HH:MM", "day|HH:MM", ...]')
+        function, job_name = self._manifest_function(target,
+                                                     job_name,
+                                                     args,
+                                                     kwargs)
+        self._jobs[job_name] = [f"{job_name} [event | {when} | {tz}]"]
         self._processes.append(Process(target=self._schedule,
-                                       name = function.func.__qualname__,
+                                       name = job_name,
                                        args=(function, tz, when)))
 
 event_scheduler = Event(verbose=True)
