@@ -34,6 +34,33 @@ Purpose of each scheduler:
      Recurring tasks are those that occur after every "x"-seconds.
         (e.g. script_1 is called every 600 seconds)
 
+#### Using only recurrent_scheduler
+
+    >>> print(recurring_scheduler.add_job.__doc__)
+
+        Assigns an periodic task to a process.
+
+        Parameters
+        ----------
+        target : a callable function
+        period_in_seconds : int
+            the time period in seconds to execute this function
+        args : tuple(object,), optional
+            un-named argumets for the "target" callable
+            the default is ()
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name            
+        kwargs : dict{key:object}, optional
+            named argumets for the "target" callable
+            the default is {}
+
+        Returns
+        -------
+        None.
+
+See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/recurring.py)
+
 #### Using only event_scheduler
 
     >>> print(event_scheduler.add_job.__doc__)
@@ -75,48 +102,18 @@ Purpose of each scheduler:
 
 See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/event.py)
 
-#### Using only recurrent_scheduler
-
-    >>> print(recurring_scheduler.add_job.__doc__)
-
-        Assigns an periodic task to a process.
-
-        Parameters
-        ----------
-        target : a callable function
-        period_in_seconds : int
-            the time period in seconds to execute this function
-        args : tuple(object,), optional
-            un-named argumets for the "target" callable
-            the default is ()
-        job_name : str, optional
-            used to identify a job, defaults to name of the function
-            to remove jobs use this name            
-        kwargs : dict{key:object}, optional
-            named argumets for the "target" callable
-            the default is {}
-
-        Returns
-        -------
-        None.
-
-See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/recurring.py)
-
 ### Toggle verbose
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
 
 ### Job summary
-See a summary of jobs[job_name] scheduled with associated process ids.
     >>> event_scheduler.job_summary()
     >>> recurring_scheduler.job_summary()
 
 ### Remove jobs
-Remove future jobs that are no longer required to be scheduled.
     >>> event_scheduler.remove_job(job_name)
     >>> recurring_scheduler.remove_job(job_name)
     
 ### Clear schedule
-Stop all future jobs and clear the schedule
     >>> event_scheduler.clear()
     >>> recurring_scheduler.clear()
