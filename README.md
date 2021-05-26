@@ -15,7 +15,7 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples) folder.
+    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/) folder.
 
 ### Long
 There are two different schedulers:
