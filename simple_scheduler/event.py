@@ -29,17 +29,39 @@ class Event(Schedule):
         None.
         """
         while True:
-            HH_MM = str(datetime.now(timezone(tz)).time()).rsplit(":",1)[0]
+            HH, MM = str(datetime.now(timezone(tz)).time()).\
+                        rsplit(":",1)[0].\
+                            split(":")
             day = self._days[datetime.today().weekday()]
-            if (f"{day}|{HH_MM}" in when) | (f"*|{HH_MM}" in when):
+            condition_1 = (f"{day}|{HH}:{MM}" in when) |\
+                               (f"*|{HH}:{MM}" in when)
+            condition_2 = (f"{day}|*{HH[1]}:{MM}" in when) |\
+                              (f"*|*{HH[1]}:{MM}" in when)
+            condition_3 = (f"{day}|{HH[0]}*:{MM}" in when) |\
+                              (f"*|{HH[0]}*:{MM}" in when)
+            condition_4 = (f"{day}|{HH}:*{MM[1]}" in when) |\
+                              (f"*|{HH}:*{MM[1]}" in when)
+            condition_5 = (f"{day}|{HH}:{MM[0]}*" in when) |\
+                              (f"*|{HH}:{MM[0]}*" in when)
+            condition_6 = (f"{day}|**:{MM}" in when) |\
+                             (f"*|**:{MM}" in when)
+            condition_7 = (f"{day}|**:{MM[0]}*" in when) |\
+                              (f"*|**:{MM[0]}*" in when)
+            condition_8 = (f"{day}|**:*{MM[1]}" in when) |\
+                              (f"*|**:*{MM[1]}" in when)                              
+            if True in [condition_1, condition_2, condition_3, condition_4,
+                        condition_5, condition_6, condition_7, condition_8]:
                 for tries in range(3): # number of attempts for any job
                     try:
-                        function()
+                        p = Process(target = function)
+                        p.start()
+                        self._workers.append(p)
                         self._sleep(period_in_seconds=60)
                         break
                     except Exception as e:
                         self._print(str(e))
-                        self._sleep(period_in_seconds=10)
+                        self._sleep(period_in_seconds=10) # re-attempt duration
+                        p.ternimate()
                         continue
             else:
                 self._sleep(period_in_seconds=55)
@@ -72,6 +94,7 @@ class Event(Schedule):
         ------
         Exception
             - If time (in "when"-list) is not a collection of "day|HH:MM"
+              i.e. *|HH:MM, *|HH:MM, *|*H:MM, *|**:MM, *|**:*M, *|**:M*'
             eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                    clock, with "|" as day
                                                    separator and ":" as time
@@ -84,18 +107,42 @@ class Event(Schedule):
         """
         when = [w.lower() for w in when]
         try:
-            [int(x.split(":")[0].split("|")[1]) for x in when]
-            [int(x.split(":")[1]) for x in when]
+            desired_day_list = list(self._days.values()) + ["*"]
+            for element in when:
+                if element.split("|")[0] not in desired_day_list:
+                    raise Exception("Incorrect day; should be one of "+\
+                                    "{list(self._days.values()) + ["*"]}")
+                HH, MM = element.split("|")[1].split(":")
+                if MM == "**":
+                    raise
+                try:
+                    assert(int(HH[0]))
+                except ValueError:
+                    assert(HH[0] == "*")
+                try:
+                    assert(int(HH[1]))
+                except ValueError:
+                    assert(HH[1] == "*")
+                try:
+                    assert(int(MM[0]))
+                except ValueError:
+                    assert(MM[0] == "*")
+                try:
+                    assert(int(MM[1]))
+                except ValueError:
+                    assert(MM[1] == "*")
         except:
-            raise Exception('Elements of "when" (list) must be a collection' +\
-                            'of ["day|HH:MM", "day|HH:MM", ...]')
+            raise Exception('Elements of "when"(type -> list(str)) must be a collection' +\
+                            ' of:\n*|HH:MM,\n*|HH:MM,\n*|*H:MM,\n*|**:MM,'+\
+                            '\n*|**:*M,\n*|**:M*')
         function, job_name = self._manifest_function(target,
                                                      job_name,
                                                      args,
                                                      kwargs)
-        self._jobs[job_name] = [f"{job_name} [event | {when} | {tz}]"]
+        self._jobs[job_name] = [f"{job_name} event | {when} | {tz}]"]
         self._processes.append(Process(target=self._schedule,
                                        name = job_name,
                                        args=(function, tz, when)))
 
 event_scheduler = Event(verbose=True)
+

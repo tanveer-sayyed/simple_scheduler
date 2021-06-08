@@ -72,12 +72,13 @@ class Schedule():
         None.
 
         """
-        s = time() + period_in_seconds
-        for x in self._workers:
-            if not x.is_alive():
-                x.join()
-                self._workers.remove(x)
-        sleep(s - time())
+        if period_in_seconds > 0:
+            s = time() + period_in_seconds
+            for x in self._workers:
+                if not x.is_alive():
+                    x.join()
+                    self._workers.remove(x)
+            sleep(s - time())
 
     def run(self):
         """
@@ -148,13 +149,13 @@ class Schedule():
         else:
             self._print("No such job_name exists.")
 
-    def _remove_job(self, remove_this_job):
+    def _remove_job(self, this_job):
         """
         Helper function.
 
         Parameters
         ----------
-        remove_this_job : instance of multiprocess.Process
+        this_job : instance of multiprocess.Process
 
         Returns
         -------
@@ -162,11 +163,11 @@ class Schedule():
 
         """
         try:
-            if remove_this_job.is_alive():
-                self._print(f"Removed job: {remove_this_job.name}")
-                remove_this_job.terminate()
-                self._processes.remove(remove_this_job)
-                self._jobs.pop(remove_this_job.name)
+            if this_job.is_alive():
+                self._print(f"Removed job: {this_job.name}")
+                this_job.terminate()
+                self._processes.remove(this_job)
+                self._jobs.pop(this_job.name)
         except:
             raise
 

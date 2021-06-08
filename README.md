@@ -15,7 +15,7 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/) folder
+    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
 
 ### Long
 There are two different schedulers:
@@ -91,7 +91,7 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
         ------
         Exception
             - If time (in "when"-list) is not a collection of "day|HH:MM"
-            eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
+            eg. ["*|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                    clock, with "|" as day
                                                    separator and ":" as time
                                                    separator
@@ -106,7 +106,7 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
 
-### Job summary
+### Job summary (before and after jobs are run)
     >>> event_scheduler.job_summary()
     >>> recurring_scheduler.job_summary()
 
