@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: simple-scheduler
-Version: 1.0.8
+Version: 1.0.9
 Summary: Easily schedule multiple events and recurring tasks (simultaneously in background).
 Home-page: https://github.com/Vernal-Inertia/simple_scheduler
 Author: Vernal Inertia
@@ -27,7 +27,7 @@ Description: # simple_scheduler
         ## How to use?
         
         ### Quick-start
-            See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
+            See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples)
         
         ### Long
         There are two different schedulers:
@@ -121,6 +121,12 @@ Description: # simple_scheduler
         ### Job summary (before and after jobs are run)
             >>> event_scheduler.job_summary()
             >>> recurring_scheduler.job_summary()
+            
+        ### Number of reattempts in case event fails (fallback)
+            >>> event_scheduler.add_job(number_of_reattempts = 3)
+        
+        ### Reattempt duration(seconds) between each reattempt (fallback)
+            >>> event_scheduler.add_job(reattempt_duration = 10)
         
         ### Remove jobs
             >>> event_scheduler.remove_job(job_name)

@@ -1,13 +1,13 @@
-from time import sleep
+from time import sleep, ctime, time
 from simple_scheduler.event import event_scheduler
 
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
-WHEN = ["mon|17:45", "*|17:46"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
+WHEN = ["mon|14:**", "*|17:46"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
 
 # correct argument precedence in a function
 def print_args(a, b=1, *args, **kwargs):
-    print(a, b, args, kwargs)
+    print(ctime(time()), a, b, args, kwargs)
 # the above print_args function would be called twice,
 # so to differentiate between then use "job_name"
 
@@ -30,7 +30,7 @@ event_scheduler.job_summary()
 event_scheduler.run()
 event_scheduler.job_summary()
 
-sleep(100)
+sleep(200)
 event_scheduler.remove_job("print-args-2")
 
 sleep(5)

@@ -80,6 +80,12 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
         job_name : str, optional
             used to identify a job, defaults to name of the function
             to remove jobs use this name
+        number_of_reattempts : int, optional
+            defailt is 3
+            each event is tried these many number of times, but executed once
+        reattempt_duration : int, optional
+            default is 10 secs
+            duration to wait (in seconds) after un-successful attempt
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
@@ -91,7 +97,8 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
         ------
         Exception
             - If time (in "when"-list) is not a collection of "day|HH:MM"
-            eg. ["*|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
+              i.e. *|HH:MM, *|HH:MM, *|*H:MM,, *|*H:MM, *|**:MM, *|**:*M, *|**:M*'
+            eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                    clock, with "|" as day
                                                    separator and ":" as time
                                                    separator
@@ -109,6 +116,12 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
 ### Job summary (before and after jobs are run)
     >>> event_scheduler.job_summary()
     >>> recurring_scheduler.job_summary()
+    
+### Number of reattempts in case event fails (fallback)
+    >>> event_scheduler.add_job(number_of_reattempts = 3)
+
+### Reattempt duration(seconds) between each reattempt (fallback)
+    >>> event_scheduler.add_job(reattempt_duration = 10)
 
 ### Remove jobs
     >>> event_scheduler.remove_job(job_name)
