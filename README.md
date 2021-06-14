@@ -15,7 +15,7 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples)
+    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
 
 ### Long
 There are two different schedulers:
@@ -117,10 +117,10 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
     >>> event_scheduler.job_summary()
     >>> recurring_scheduler.job_summary()
     
-### Number of reattempts in case event fails (fallback)
+### Number of reattempts in case event fails [fallback]
     >>> event_scheduler.add_job(number_of_reattempts = 3)
 
-### Reattempt duration(seconds) between each reattempt (fallback)
+### Reattempt duration(in seconds) between each reattempt [fallback]
     >>> event_scheduler.add_job(reattempt_duration = 10)
 
 ### Remove jobs
