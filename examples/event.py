@@ -3,7 +3,7 @@ from simple_scheduler.event import event_scheduler
 
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
-WHEN = ["mon|14:**", "*|17:46"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
+WHEN = ["mon|09:**", "*|10:45"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
 
 # correct argument precedence in a function
 def print_args(a, b=1, *args, **kwargs):

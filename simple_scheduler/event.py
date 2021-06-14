@@ -66,7 +66,7 @@ class Event(Schedule):
                         p = Process(target = function)
                         p.start()
                         self._workers.append(p)
-                        self._sleep(period_in_seconds=60)
+                        self._sleep(period_in_seconds=59.9)
                         break
                     except Exception as e:
                         self._print(str(e))
@@ -75,6 +75,13 @@ class Event(Schedule):
                         continue
             else:
                 self._sleep(period_in_seconds=55)
+                
+    def __assert_int(self, i):
+        try:
+            if i is not "0":
+                assert(int(i))
+        except ValueError:
+            assert(i == "*")
 
     def add_job(self, target, tz, when,
                 job_name=None,
@@ -135,21 +142,17 @@ class Event(Schedule):
                                     "{list(self._days.values()) + ["*"]}")
                 HH, MM = element.split("|")[1].split(":")
                 try:
-                    assert(int(HH[0]))
-                except ValueError:
-                    assert(HH[0] == "*")
+                    assert(len(HH) == 2)
+                except:
+                    raise
                 try:
-                    assert(int(HH[1]))
-                except ValueError:
-                    assert(HH[1] == "*")
-                try:
-                    assert(int(MM[0]))
-                except ValueError:
-                    assert(MM[0] == "*")
-                try:
-                    assert(int(MM[1]))
-                except ValueError:
-                    assert(MM[1] == "*")
+                    assert(len(MM) == 2)
+                except:
+                    raise
+                self.__assert_int(HH[0])
+                self.__assert_int(HH[1])
+                self.__assert_int(MM[0])
+                self.__assert_int(MM[1])
         except:
             raise Exception('Elements of "when"(list(str)) must be a ' +\
                             'collection of:\n*|HH:MM,\n*|HH:MM,\n*|H*:MM,\n'+\

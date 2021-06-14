@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: simple-scheduler
-Version: 1.0.9
+Version: 1.0.10
 Summary: Easily schedule multiple events and recurring tasks (simultaneously in background).
 Home-page: https://github.com/Vernal-Inertia/simple_scheduler
 Author: Vernal Inertia
@@ -27,7 +27,7 @@ Description: # simple_scheduler
         ## How to use?
         
         ### Quick-start
-            See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples)
+            See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
         
         ### Long
         There are two different schedulers:
@@ -92,6 +92,12 @@ Description: # simple_scheduler
                 job_name : str, optional
                     used to identify a job, defaults to name of the function
                     to remove jobs use this name
+                number_of_reattempts : int, optional
+                    defailt is 3
+                    each event is tried these many number of times, but executed once
+                reattempt_duration : int, optional
+                    default is 10 secs
+                    duration to wait (in seconds) after un-successful attempt
                 args : tuple(object,), optional
                     un-named argumets for the "target" callable
                     the default is ()
@@ -103,7 +109,8 @@ Description: # simple_scheduler
                 ------
                 Exception
                     - If time (in "when"-list) is not a collection of "day|HH:MM"
-                    eg. ["*|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
+                      i.e. *|HH:MM, *|HH:MM, *|*H:MM,, *|*H:MM, *|**:MM, *|**:*M, *|**:M*'
+                    eg. ["tue|12:30am","thu|2:30 pm", ...] please "only" use 24-hour
                                                            clock, with "|" as day
                                                            separator and ":" as time
                                                            separator
@@ -122,10 +129,10 @@ Description: # simple_scheduler
             >>> event_scheduler.job_summary()
             >>> recurring_scheduler.job_summary()
             
-        ### Number of reattempts in case event fails (fallback)
+        ### Number of reattempts in case event fails [fallback]
             >>> event_scheduler.add_job(number_of_reattempts = 3)
         
-        ### Reattempt duration(seconds) between each reattempt (fallback)
+        ### Reattempt duration(in seconds) between each reattempt [fallback]
             >>> event_scheduler.add_job(reattempt_duration = 10)
         
         ### Remove jobs
