@@ -5,7 +5,11 @@
 - Simultaneously schedule any number of jobs.
 - Recurring jobs to be precisely sheduled.
 - Event jobs to be executed within the minute.
-- Long jobs to be executed even if previous call(s) is(are) still running.
+- Works even when period < execution time
+- Scheduled the same function, again, with a different job_name
+- On execution failure, set the number of reattempts.
+- Control the duration between each re-attempt
+- Works only in background, hence easy to intergrate across platforms(eg. flask)
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
