@@ -1,6 +1,6 @@
 # simple_scheduler
 - Does not miss future events.
-- Uses multiprocessing to schedule jobs.
+- Uses light weight multiprocessing to schedule jobs.
 - This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
 - Recurring jobs to be precisely sheduled.
@@ -8,7 +8,7 @@
 - Works even when period < execution time
 - Scheduled the same function, again, with a different job_name
 - On execution failure, set the number of reattempts.
-- Control the duration between each re-attempt
+- Control the duration between each re-attempt.
 - Works only in background, hence easy to intergrate across platforms(eg. flask)
 
 ## Install
