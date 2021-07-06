@@ -1,6 +1,7 @@
-from time import time, sleep
 from functools import partial
 from pytz import all_timezones
+from multiprocess import Process
+from time import time, sleep, ctime
 
 class Schedule():
     """ The parent of "event" and "recurring" classes."""
@@ -79,6 +80,24 @@ class Schedule():
                     x.join()
                     self._workers.remove(x)
             sleep(s - time())
+
+    def _execute(self,
+                 function,
+                 period_in_seconds,
+                 number_of_reattempts,
+                 reattempt_duration_in_seconds):
+        p = Process(target = function)
+        p.start(); self._workers.append(p)
+        timer = time() + period_in_seconds
+        for tries in range(number_of_reattempts + 1):
+            self._sleep(period_in_seconds = timer - \
+                                            time() - \
+                                            reattempt_duration_in_seconds)
+            if (number_of_reattempts > 1) & (p.exitcode != 0):
+                p.join()
+                p = Process(target = function)
+                p.start(); self._workers.append(p)
+        self._sleep(period_in_seconds= timer - time())
 
     def run(self):
         """

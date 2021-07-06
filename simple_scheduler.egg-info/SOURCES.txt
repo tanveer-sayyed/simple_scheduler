@@ -2,6 +2,8 @@ LICENSE
 README.md
 setup.cfg
 setup.py
+examples/event.py
+examples/recurring.py
 simple_scheduler/__init__.py
 simple_scheduler/base.py
 simple_scheduler/event.py

@@ -3,13 +3,13 @@
 - Uses light weight multiprocessing to schedule jobs.
 - This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
-- Recurring jobs to be precisely sheduled.
+- Recurring jobs to be precisely scheduled.
 - Event jobs to be executed within the minute.
 - Works even when period < execution time
-- Scheduled the same function, again, with a different job_name
+- Schedule the same function, again, with a different job_name
 - On execution failure, set the number of reattempts.
 - Control the duration between each re-attempt.
-- Works only in background, hence easy to intergrate across platforms(eg. flask)
+- Works only in background, hence easy to intergrate across platforms(eg. django, flask)
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
@@ -58,6 +58,12 @@ Purpose of each scheduler:
         kwargs : dict{key:object}, optional
             named argumets for the "target" callable
             the default is {}
+        number_of_reattempts : int, optional
+            default is 0
+            each recurring is tried these many number of times, but executed once
+        reattempt_duration_in_seconds : int, optional
+            default is 10 secs
+            duration to wait (in seconds) after un-successful attempt
 
         Returns
         -------
@@ -87,7 +93,7 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
         number_of_reattempts : int, optional
             defailt is 3
             each event is tried these many number of times, but executed once
-        reattempt_duration : int, optional
+        reattempt_duration_in_seconds : int, optional
             default is 10 secs
             duration to wait (in seconds) after un-successful attempt
         args : tuple(object,), optional
@@ -113,7 +119,7 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
 
 See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/event.py)
 
-### Toggle verbose
+### Toggle verbose (for debugging set to True)
     >>> event_scheduler.verbose = False
     >>> recurring_scheduler.verbose = True
 
@@ -123,14 +129,16 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
     
 ### Number of reattempts in case event fails [fallback]
     >>> event_scheduler.add_job(number_of_reattempts = 3)
+    >>> recurring_scheduler.add_job(number_of_reattempts = 0)
 
 ### Reattempt duration(in seconds) between each reattempt [fallback]
-    >>> event_scheduler.add_job(reattempt_duration = 10)
+    >>> event_scheduler.add_job(reattempt_duration_in_seconds = 10)
+    >>> recurring_scheduler.add_job(reattempt_duration_in_seconds = 10)
 
-### Remove jobs
+### Remove a single job
     >>> event_scheduler.remove_job(job_name)
     >>> recurring_scheduler.remove_job(job_name)
     
-### Clear schedule
+### Clear schedule (remove all jobs)
     >>> event_scheduler.clear()
     >>> recurring_scheduler.clear()

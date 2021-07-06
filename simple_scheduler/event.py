@@ -13,7 +13,7 @@ class Event(Schedule):
         super().__init__(*args, **kwargs)
 
     def _schedule(self, function, tz, when, number_of_reattempts,
-                  reattempt_duration):
+                  reattempt_duration_in_seconds):
         """
 
         Parameters
@@ -26,9 +26,9 @@ class Event(Schedule):
             hour of the time to be scheduled
         minute : int
             minute of the time to be scheduled
-        number_of_reattempts : int, optional
+        number_of_reattempts : int
             each event is tried these many number of times, but executed once
-        reattempt_duration : int, optional
+        reattempt_duration_in_seconds : int
             duration to wait (in seconds) after un-successful attempt
 
         Returns
@@ -61,18 +61,17 @@ class Event(Schedule):
             if True in [condition_1, condition_2, condition_3, condition_4,
                         condition_5, condition_6, condition_7, condition_8,
                         condition_9]:
-                for tries in range(number_of_reattempts):
-                    try:
-                        p = Process(target = function)
-                        p.start()
-                        self._workers.append(p)
-                        self._sleep(period_in_seconds=59.9)
-                        break
-                    except Exception as e:
-                        self._print(str(e))
-                        self._sleep(period_in_seconds=reattempt_duration)
-                        p.ternimate()
-                        continue
+                try:
+                    self._execute(
+                        function=function,
+                        period_in_seconds=60,
+                        number_of_reattempts=number_of_reattempts,
+                        reattempt_duration_in_seconds=reattempt_duration_in_seconds)
+                except Exception as e:
+                    self._print(str(e))
+                    [p.terminate for p in self._workers]
+                    self._workers = []
+                    pass
             else:
                 self._sleep(period_in_seconds=55)
                 
@@ -85,8 +84,8 @@ class Event(Schedule):
 
     def add_job(self, target, tz, when,
                 job_name=None,
-                number_of_reattempts=3,
-                reattempt_duration=10,
+                number_of_reattempts=0,
+                reattempt_duration_in_seconds=0,
                 args=(),
                 kwargs={}):
         """
@@ -106,10 +105,10 @@ class Event(Schedule):
             used to identify a job, defaults to name of the function
             to remove jobs use this name
         number_of_reattempts : int, optional
-            defailt is 3
+            defailt is 0
             each event is tried these many number of times, but executed once
-        reattempt_duration : int, optional
-            default is 10 secs
+        reattempt_duration_in_seconds : int, optional
+            default is 0 secs
             duration to wait (in seconds) after un-successful attempt
         args : tuple(object,), optional
             un-named argumets for the "target" callable
@@ -158,12 +157,12 @@ class Event(Schedule):
                             'collection of:\n*|HH:MM,\n*|HH:MM,\n*|H*:MM,\n'+\
                             '*|*H:MM,\n*|**:MM,\n*|**:M*,\n*|**:*M,\n*|HH:**')
         try:
-            assert(type(reattempt_duration) == int)
+            assert(type(reattempt_duration_in_seconds) == int)
         except ValueError:
             try:
-                assert(type(reattempt_duration) == float)
+                assert(type(reattempt_duration_in_seconds) == float)
             except ValueError:
-                raise Exception("reattempt_duration(seconds) should be"+\
+                raise Exception("reattempt_duration_in_seconds(seconds) should be"+\
                                 " either int or float")
             
         function, job_name = self._manifest_function(target,
@@ -177,6 +176,6 @@ class Event(Schedule):
                                              tz,
                                              when,
                                              number_of_reattempts,
-                                             reattempt_duration)))
+                                             reattempt_duration_in_seconds)))
 
 event_scheduler = Event(verbose=True)
