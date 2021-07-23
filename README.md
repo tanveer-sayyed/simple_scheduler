@@ -1,15 +1,17 @@
 # simple_scheduler
 - Does not miss future events.
+- Works even when period < execution time
+- Works on any platform (Linux, Windows, Mac)
 - Uses light weight multiprocessing to schedule jobs.
 - This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
 - Recurring jobs to be precisely scheduled.
 - Event jobs to be executed within the minute.
-- Works even when period < execution time
 - Schedule the same function, again, with a different job_name
 - On execution failure, set the number of reattempts.
 - Control the duration between each re-attempt.
 - Works only in background, hence easy to intergrate across platforms(eg. django, flask)
+- Set start and stop timestamps if you want to ensure that your function executes only within this window
 
 ## Install
 From [PyPi](https://pypi.org/project/simple_scheduler/) :
