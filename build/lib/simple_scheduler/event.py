@@ -12,7 +12,7 @@ class Event(Schedule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _schedule(self, function, tz, when, number_of_reattempts,
+    def _schedule(self, function, when, tz, start, stop, number_of_reattempts,
                   reattempt_duration_in_seconds):
         """
 
@@ -20,12 +20,20 @@ class Event(Schedule):
         ----------
         function : callable function
             name of the function which needs to be scheduled
-        tz : str
-            timezone
-        hour : int
-            hour of the time to be scheduled
-        minute : int
-            minute of the time to be scheduled
+        when : list, a collection of "day|HH:MM"
+            at what precise time(s) should the function be called
+            eg. ["mon|22:04","*|03:45", ...] please "only" use 24-hour
+                                             clock with "|" as day separator
+                                             and ":" as time separator
+        tz : str, optional
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
         number_of_reattempts : int
             each event is tried these many number of times, but executed once
         reattempt_duration_in_seconds : int
@@ -62,11 +70,19 @@ class Event(Schedule):
                         condition_5, condition_6, condition_7, condition_8,
                         condition_9]:
                 try:
-                    self._execute(
+                    continue_ = self._execute(
                         function=function,
+                        tz=tz,
+                        start=start,
+                        stop=stop,
                         period_in_seconds=60,
                         number_of_reattempts=number_of_reattempts,
-                        reattempt_duration_in_seconds=reattempt_duration_in_seconds)
+                        reattempt_duration_in_seconds=\
+                            reattempt_duration_in_seconds)
+                    if continue_:
+                        continue
+                    else:
+                        break
                 except Exception as e:
                     self._print(str(e))
                     [p.terminate for p in self._workers]
@@ -76,13 +92,30 @@ class Event(Schedule):
                 self._sleep(period_in_seconds=55)
                 
     def __assert_int(self, i):
+        """
+        validaror function
+
+        Parameters
+        ----------
+        i : str
+
+        Returns
+        -------
+        None.
+
+        """
         try:
             if i is not "0":
-                assert(int(i))
-        except ValueError:
+                assert(i.isnumeric())
+        except AssertionError:
             assert(i == "*")
 
-    def add_job(self, target, tz, when,
+    def add_job(self,
+                target,
+                when,
+                tz="GMT",
+                start=None,
+                stop=None,
                 job_name=None,
                 number_of_reattempts=0,
                 reattempt_duration_in_seconds=0,
@@ -94,13 +127,20 @@ class Event(Schedule):
         Parameters
         ----------
         target : a callable function
-        tz : str
-            time zone (call the method .timezones() for more info)
         when : list, a collection of "day|HH:MM"
             at what precise time(s) should the function be called
             eg. ["mon|22:04","*|03:45", ...] please "only" use 24-hour
                                              clock with "|" as day separator
                                              and ":" as time separator
+        tz : str, optional
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
         job_name : str, optional
             used to identify a job, defaults to name of the function
             to remove jobs use this name
@@ -164,7 +204,10 @@ class Event(Schedule):
             except ValueError:
                 raise Exception("reattempt_duration_in_seconds(seconds) should be"+\
                                 " either int or float")
-            
+        try:
+            self._validate_start_stop(start, stop)
+        except:
+            raise
         function, job_name = self._manifest_function(target,
                                                      job_name,
                                                      args,
@@ -172,9 +215,7 @@ class Event(Schedule):
         self._jobs[job_name] = [f"{job_name} event | {when} | {tz}]"]
         self._processes.append(Process(target=self._schedule,
                                        name = job_name,
-                                       args=(function,
-                                             tz,
-                                             when,
+                                       args=(function, when, tz, start, stop,
                                              number_of_reattempts,
                                              reattempt_duration_in_seconds)))
 

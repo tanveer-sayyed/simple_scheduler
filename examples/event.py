@@ -3,8 +3,7 @@ from simple_scheduler.event import event_scheduler
 
 event_scheduler.timezones()
 TZ = "Asia/Kolkata"
-WHEN = ["tue|14:**", "*|10:45"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
-
+WHEN = ["fri|14:28", "*|14:**"] #[mon/tue/wed/thu/fri/sat/sun] or "*" for all days
 # correct argument precedence in a function
 def print_args(a, b=1, *args, **kwargs):
     print(ctime(time()), a, b, args, kwargs)
@@ -23,8 +22,9 @@ event_scheduler.add_job(target= print_args,
                                   "key2":"value2"},
                         when = WHEN,
                         tz = TZ,
+                        start="Jul 23 14:16:05 2021",
+                        stop="Jul 23 14:18:05 2021",
                         job_name = "print-args-2")
-
 event_scheduler.verbose = True # (default)
 event_scheduler.job_summary()
 event_scheduler.run()

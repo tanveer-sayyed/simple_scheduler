@@ -1,7 +1,8 @@
+from time import time, sleep
+from datetime import datetime
 from functools import partial
-from pytz import all_timezones
 from multiprocess import Process
-from time import time, sleep, ctime
+from pytz import all_timezones, timezone
 
 class Schedule():
     """ The parent of "event" and "recurring" classes."""
@@ -22,11 +23,22 @@ class Schedule():
         self._jobs = {}
 
     def job_summary(self):
+        """
+        Provides summary of jobs that are still running
+
+        Returns
+        -------
+        None.
+
+        """
         self._print("\tScheduled jobs:")
+        names = {p.name:p.is_alive() for p in self._processes}
         for _, name in enumerate(self._jobs):
             msg = f"{self._jobs[name][0]}"
             try:
                 msg += f" running in {self._jobs[name][1]}"
+                if not names[name]:
+                    continue
             except:
                 pass
             self._print(msg)
@@ -82,22 +94,50 @@ class Schedule():
             sleep(s - time())
 
     def _execute(self,
+                 tz,
+                 start,
+                 stop,
                  function,
                  period_in_seconds,
                  number_of_reattempts,
                  reattempt_duration_in_seconds):
-        p = Process(target = function)
-        p.start(); self._workers.append(p)
-        timer = time() + period_in_seconds
-        for tries in range(number_of_reattempts + 1):
-            self._sleep(period_in_seconds = timer - \
-                                            time() - \
-                                            reattempt_duration_in_seconds)
-            if (number_of_reattempts > 1) & (p.exitcode != 0):
-                p.join()
-                p = Process(target = function)
-                p.start(); self._workers.append(p)
-        self._sleep(period_in_seconds= timer - time())
+        """
+        Parameters
+        ----------
+        function : callable function
+            name of the function which needs to be scheduled
+        period_in_seconds : int
+        number_of_reattempts : int
+            each event is tried these many number of times, but executed once
+        reattempt_duration_in_seconds : int
+            duration to wait (in seconds) after un-successful attempt
+
+        Returns
+        -------
+        int
+
+        """
+        time_ = datetime.now(timezone(tz)).ctime()[4:]
+        stop = stop if stop else time_
+        start = start if start else time_
+        if (time_ >= str(start)) & (time_ <= str(stop)):
+            p = Process(target = function)
+            p.start(); self._workers.append(p)
+            timer = time() + period_in_seconds
+            for tries in range(number_of_reattempts + 1):
+                self._sleep(period_in_seconds = timer - \
+                                                time() - \
+                                                reattempt_duration_in_seconds)
+                if (number_of_reattempts > 1) & (p.exitcode != 0):
+                    p.join()
+                    p = Process(target = function)
+                    p.start(); self._workers.append(p)
+            self._sleep(period_in_seconds= timer - time())
+            return 1
+        elif time_ < str(start):
+            return 1
+        elif time_ > str(stop):
+            return 0
 
     def run(self):
         """
@@ -146,6 +186,20 @@ class Schedule():
             self._processes = []
             raise
 
+    def _validate_start_stop(self, start, stop):
+        try:
+            for x in [start, stop]:
+                if x:
+                    month, date, time, year = start.split(" ")
+                    assert(month.istitle()); assert(len(month) == 3)
+                    assert(date.isnumeric()); assert(len(date) == 2)
+                    for t in time.split(":"):
+                        assert(t.isnumeric()); assert(len(t) == 2)
+                    assert(year.isnumeric()); assert(len(year) == 4)
+        except:
+            raise Exception('start/stop must be of the form'+\
+                            ' "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")')
+
     def remove_job(self, job_name):
         """
         Remove job from schedule by providing job_name
@@ -184,9 +238,9 @@ class Schedule():
         try:
             if this_job.is_alive():
                 self._print(f"Removed job: {this_job.name}")
-                this_job.terminate()
-                self._processes.remove(this_job)
                 self._jobs.pop(this_job.name)
+                self._processes.remove(this_job)
+                this_job.terminate()
         except:
             raise
 

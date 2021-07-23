@@ -19,7 +19,7 @@ From [PyPi](https://pypi.org/project/simple_scheduler/) :
 ## How to use?
 
 ### Quick-start
-    See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
+See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
 
 ### Long
 There are two different schedulers:
@@ -135,6 +135,14 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
     >>> event_scheduler.add_job(reattempt_duration_in_seconds = 10)
     >>> recurring_scheduler.add_job(reattempt_duration_in_seconds = 10)
 
+### Start time (keep the scheduler running but postpone execution at this time)
+    >>> event_scheduler.add_job(start="Dec 31 23:59:59 2021")
+    >>> recurring_scheduler.add_job(start="Dec 31 23:59:59 2021")
+    
+### Stop time (time when scheduler expires)
+    >>> event_scheduler.add_job(stop="Dec 31 23:59:59 2021")
+    >>> recurring_scheduler.add_job(stop="Dec 31 23:59:59 2021")
+    
 ### Remove a single job
     >>> event_scheduler.remove_job(job_name)
     >>> recurring_scheduler.remove_job(job_name)
@@ -142,3 +150,12 @@ See [examples/event.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/
 ### Clear schedule (remove all jobs)
     >>> event_scheduler.clear()
     >>> recurring_scheduler.clear()
+    
+### Docker with gunicorn
+    In app.py ensure that scheduler is started globally and not within main()
+    >>> event_scheduler.run()
+    >>> if __name__ == "__main__":
+    >>>    app.run(host="0.0.0.0", port="5000")
+
+    In gunicorn config or args, add: --preload
+    (this will ensure that only one instance of scheduler is running)    

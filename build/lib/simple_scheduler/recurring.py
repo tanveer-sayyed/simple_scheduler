@@ -1,4 +1,5 @@
-from time import time, ctime
+from signal import SIGTERM
+from os import kill, getpid
 from multiprocess import Process
 
 from simple_scheduler.base import Schedule
@@ -10,12 +11,19 @@ class Recurring(Schedule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _schedule(self, function, period_in_seconds, number_of_reattempts,
+    def _schedule(self, function, tz, start, stop, 
+                  period_in_seconds, number_of_reattempts,
                   reattempt_duration_in_seconds):
         """
         Parameters
         ----------
         function : a callable function
+        tz : str
+            standard time zone (call the method .timezones() for more info)
+        start : str
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+        stop : str
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
         period_in_seconds : int
             the time period in seconds
         number_of_reattempts : int
@@ -30,22 +38,35 @@ class Recurring(Schedule):
         """
         while True:
             try:
-                self._execute(
+                continue_ = self._execute(
+                    tz=tz,
+                    start=start,
+                    stop=stop,
                     function=function,
                     period_in_seconds=period_in_seconds,
                     number_of_reattempts=number_of_reattempts,
-                    reattempt_duration_in_seconds=reattempt_duration_in_seconds)
+                    reattempt_duration_in_seconds=reattempt_duration_in_seconds
+                    )
+                if continue_:
+                    continue
+                else:
+                    break
             except Exception as e:
                 self._print(str(e))
                 [p.terminate for p in self._workers]
                 self._workers = []
                 pass
 
-    def add_job(self, target,
+    def add_job(self,
+                target,
                 period_in_seconds,
+                tz="GMT",
+                start=None,
+                stop=None,
+                job_name=None,
                 number_of_reattempts=0,
                 reattempt_duration_in_seconds=0,
-                job_name=None, args=(),
+                args=(),
                 kwargs={}):
         """
         Assigns an periodic task to a process.
@@ -55,6 +76,15 @@ class Recurring(Schedule):
         target : a callable function
         period_in_seconds : int
             the time period in seconds to execute this function
+        tz : str, optional
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
         job_name : str, optional
             used to identify a job, defaults to name of the function
             to remove jobs use this name
@@ -89,6 +119,10 @@ class Recurring(Schedule):
         except:
             print("(reattempt_duration_in_seconds * number_of_reattempts) must be less"+\
                   " than (period_in_seconds)")
+        try:
+            self._validate_start_stop(start, stop)
+        except:
+            raise
 
         function, job_name = self._manifest_function(target,
                                                      job_name,
@@ -98,7 +132,7 @@ class Recurring(Schedule):
                                f"[recurring | {period_in_seconds}-second(s)]"]
         p = Process(target=self._schedule,
                     name = job_name,
-                    args=(function, period_in_seconds,
+                    args=(function, tz, start, stop, period_in_seconds,
                           number_of_reattempts, reattempt_duration_in_seconds))
         self._processes.append(p)
 

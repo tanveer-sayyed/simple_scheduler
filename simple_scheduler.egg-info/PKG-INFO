@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: simple-scheduler
-Version: 1.1.10
+Version: 1.1.11
 Summary: Easily schedule multiple events and recurring tasks (simultaneously in background).
 Home-page: https://github.com/Vernal-Inertia/simple_scheduler
 Author: Vernal Inertia
@@ -12,12 +12,16 @@ Project-URL: Documentation, https://github.com/Vernal-Inertia/simple_scheduler/b
 Project-URL: Source, https://github.com/Vernal-Inertia/simple_scheduler
 Description: # simple_scheduler
         - Does not miss future events.
-        - Uses multiprocessing to schedule jobs.
+        - Uses light weight multiprocessing to schedule jobs.
         - This package uses a 24-hour clock, only.
         - Simultaneously schedule any number of jobs.
-        - Recurring jobs to be precisely sheduled.
+        - Recurring jobs to be precisely scheduled.
         - Event jobs to be executed within the minute.
-        - Long jobs to be executed even if previous call(s) is(are) still running.
+        - Works even when period < execution time
+        - Schedule the same function, again, with a different job_name
+        - On execution failure, set the number of reattempts.
+        - Control the duration between each re-attempt.
+        - Works only in background, hence easy to intergrate across platforms(eg. django, flask)
         
         ## Install
         From [PyPi](https://pypi.org/project/simple_scheduler/) :
@@ -27,7 +31,7 @@ Description: # simple_scheduler
         ## How to use?
         
         ### Quick-start
-            See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
+        See [examples](https://github.com/Vernal-Inertia/simple_scheduler/tree/main/examples/)
         
         ### Long
         There are two different schedulers:
@@ -143,6 +147,14 @@ Description: # simple_scheduler
             >>> event_scheduler.add_job(reattempt_duration_in_seconds = 10)
             >>> recurring_scheduler.add_job(reattempt_duration_in_seconds = 10)
         
+        ### Start time (keep the scheduler running but postpone execution at this time)
+            >>> event_scheduler.add_job(start="Dec 31 23:59:59 2021")
+            >>> recurring_scheduler.add_job(start="Dec 31 23:59:59 2021")
+            
+        ### Stop time (time when scheduler expires)
+            >>> event_scheduler.add_job(stop="Dec 31 23:59:59 2021")
+            >>> recurring_scheduler.add_job(stop="Dec 31 23:59:59 2021")
+            
         ### Remove a single job
             >>> event_scheduler.remove_job(job_name)
             >>> recurring_scheduler.remove_job(job_name)
@@ -150,7 +162,15 @@ Description: # simple_scheduler
         ### Clear schedule (remove all jobs)
             >>> event_scheduler.clear()
             >>> recurring_scheduler.clear()
+            
+        ### Docker with gunicorn
+            In app.py ensure that scheduler is started globally and not within main()
+            >>> event_scheduler.run()
+            >>> if __name__ == "__main__":
+            >>>    app.run(host="0.0.0.0", port="5000")
         
+            In gunicorn config or args, add: --preload
+            (this will ensure that only one instance of scheduler is running)    
 Keywords: python,schedule,simple,scheduler,jobs,tasks,easy
 Platform: UNKNOWN
 Classifier: License :: OSI Approved :: MIT License
