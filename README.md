@@ -51,12 +51,21 @@ Purpose of each scheduler:
         target : a callable function
         period_in_seconds : int
             the time period in seconds to execute this function
+        tz : str, optional
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        job_name : str, optional
+            used to identify a job, defaults to name of the function
+            to remove jobs use this name
         args : tuple(object,), optional
             un-named argumets for the "target" callable
             the default is ()
-        job_name : str, optional
-            used to identify a job, defaults to name of the function
-            to remove jobs use this name            
         kwargs : dict{key:object}, optional
             named argumets for the "target" callable
             the default is {}
@@ -64,12 +73,13 @@ Purpose of each scheduler:
             default is 0
             each recurring is tried these many number of times, but executed once
         reattempt_duration_in_seconds : int, optional
-            default is 10 secs
+            default is 0 secs
             duration to wait (in seconds) after un-successful attempt
 
         Returns
         -------
         None.
+
 
 See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/blob/main/examples/recurring.py)
 
@@ -82,21 +92,28 @@ See [examples/recurring.py](https://github.com/Vernal-Inertia/simple_scheduler/b
         Parameters
         ----------
         target : a callable function
-        tz : str
-            time zone (call the method .timezones() for more info)
         when : list, a collection of "day|HH:MM"
             at what precise time(s) should the function be called
             eg. ["mon|22:04","*|03:45", ...] please "only" use 24-hour
                                              clock with "|" as day separator
                                              and ":" as time separator
+        tz : str, optional
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
         job_name : str, optional
             used to identify a job, defaults to name of the function
             to remove jobs use this name
         number_of_reattempts : int, optional
-            defailt is 3
+            defailt is 0
             each event is tried these many number of times, but executed once
         reattempt_duration_in_seconds : int, optional
-            default is 10 secs
+            default is 0 secs
             duration to wait (in seconds) after un-successful attempt
         args : tuple(object,), optional
             un-named argumets for the "target" callable
