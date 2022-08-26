@@ -36,7 +36,7 @@ event_scheduler.add_job(
     tz="Asia/Kolkata",
     job_name="print-args-1",
     number_of_reattempts=2,
-    when=["fri|14:28", "*|14:**"],
+    when=['fri|14:28', '*|14:**'],
     reattempt_duration_in_seconds=5
     )
 event_scheduler.add_job(
@@ -46,7 +46,7 @@ event_scheduler.add_job(
         "key1":"value1",
         "key2":"value2"
         },
-    when=["fri|14:28", "*|14:**"],
+    when=['fri|14:28', '*|14:**'],
     tz="Asia/Kolkata",
     start="Jul 23 13:00:00 2021",
     stop="Jul 23 15:00:00 2021",
