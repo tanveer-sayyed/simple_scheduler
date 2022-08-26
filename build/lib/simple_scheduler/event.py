@@ -9,11 +9,23 @@ class Event(Schedule):
         e.g. scirpt_1 is called at 14:00 and 20:00
         Each event is tried 3-times (but executed only once)."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+            self,
+            *args,
+            **kwargs
+            ):
         super().__init__(*args, **kwargs)
 
-    def _schedule(self, function, when, tz, start, stop, number_of_reattempts,
-                  reattempt_duration_in_seconds):
+    def _schedule(
+            self,
+            function,
+            when,
+            tz,
+            start,
+            stop,
+            number_of_reattempts,
+            reattempt_duration_in_seconds
+            ):
         """
 
         Parameters
@@ -35,9 +47,9 @@ class Event(Schedule):
             of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
             the default is None
         number_of_reattempts : int
-            each event is tried these many number of times, but executed once
+            number of times each event is tried, but executed only once
         reattempt_duration_in_seconds : int
-            duration to wait (in seconds) after un-successful attempt
+            duration to wait (in seconds) after each un-successful attempt
 
         Returns
         -------
@@ -78,7 +90,8 @@ class Event(Schedule):
                         period_in_seconds=60,
                         number_of_reattempts=number_of_reattempts,
                         reattempt_duration_in_seconds=\
-                            reattempt_duration_in_seconds)
+                            reattempt_duration_in_seconds
+                            )
                     if continue_:
                         continue
                     else:
@@ -90,10 +103,10 @@ class Event(Schedule):
                     pass
             else:
                 self._sleep(period_in_seconds=55)
-                
+
     def __assert_int(self, i):
         """
-        validaror function
+        validator function
 
         Parameters
         ----------
@@ -105,7 +118,7 @@ class Event(Schedule):
 
         """
         try:
-            if i is not "0":
+            if i != "0":
                 assert(i.isnumeric())
         except AssertionError:
             assert(i == "*")
@@ -120,7 +133,8 @@ class Event(Schedule):
                 number_of_reattempts=0,
                 reattempt_duration_in_seconds=0,
                 args=(),
-                kwargs={}):
+                kwargs={}
+                ):
         """
         Assigns an event to a process.
 
@@ -213,10 +227,20 @@ class Event(Schedule):
                                                      args,
                                                      kwargs)
         self._jobs[job_name] = [f"{job_name} event | {when} | {tz}]"]
-        self._processes.append(Process(target=self._schedule,
-                                       name = job_name,
-                                       args=(function, when, tz, start, stop,
-                                             number_of_reattempts,
-                                             reattempt_duration_in_seconds)))
+        self._processes.append(
+            Process(
+                target=self._schedule,
+                name=job_name,
+                args=(
+                    function,
+                    when,
+                    tz,
+                    start,
+                    stop,
+                    number_of_reattempts,
+                    reattempt_duration_in_seconds
+                    )
+                )
+            )
 
 event_scheduler = Event(verbose=True)
