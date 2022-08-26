@@ -113,7 +113,7 @@ event_scheduler.add_job(reattempt_duration_in_seconds = 10)
 recurring_scheduler.add_job(reattempt_duration_in_seconds = 10)
 ```
 
-### Start time (keep the scheduler running but postpone execution at this time)
+### Start time (keep the scheduler running but postpone execution until this time)
 ```python
 event_scheduler.add_job(start="Dec 31 23:59:59 2021")
 recurring_scheduler.add_job(start="Dec 31 23:59:59 2021")
