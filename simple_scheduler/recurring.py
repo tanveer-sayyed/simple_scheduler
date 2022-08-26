@@ -1,5 +1,3 @@
-from signal import SIGTERM
-from os import kill, getpid
 from multiprocess import Process
 
 from simple_scheduler.base import Schedule
@@ -8,12 +6,23 @@ class Recurring(Schedule):
     """ Recurring tasks are those that occur after every "x"-seconds.
         (e.g. script_1 is called every 600 seconds)"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+            self,
+            *args,
+            **kwargs
+            ):
         super().__init__(*args, **kwargs)
 
-    def _schedule(self, function, tz, start, stop, 
-                  period_in_seconds, number_of_reattempts,
-                  reattempt_duration_in_seconds):
+    def _schedule(
+            self,
+            function,
+            tz,
+            start,
+            stop,
+            period_in_seconds,
+            number_of_reattempts,
+            reattempt_duration_in_seconds
+            ):
         """
         Parameters
         ----------
@@ -57,17 +66,19 @@ class Recurring(Schedule):
                 self._workers = []
                 pass
 
-    def add_job(self,
-                target,
-                period_in_seconds,
-                tz="GMT",
-                start=None,
-                stop=None,
-                job_name=None,
-                number_of_reattempts=0,
-                reattempt_duration_in_seconds=0,
-                args=(),
-                kwargs={}):
+    def add_job(
+            self,
+            target,
+            period_in_seconds,
+            tz="GMT",
+            start=None,
+            stop=None,
+            job_name=None,
+            number_of_reattempts=0,
+            reattempt_duration_in_seconds=0,
+            args=(),
+            kwargs={}
+                ):
         """
         Assigns an periodic task to a process.
 
@@ -130,10 +141,19 @@ class Recurring(Schedule):
                                                      kwargs)
         self._jobs[job_name] = [f"{job_name} "+\
                                f"[recurring | {period_in_seconds}-second(s)]"]
-        p = Process(target=self._schedule,
-                    name = job_name,
-                    args=(function, tz, start, stop, period_in_seconds,
-                          number_of_reattempts, reattempt_duration_in_seconds))
+        p = Process(
+            target=self._schedule,
+            name=job_name,
+            args=(
+                function,
+                tz,
+                start,
+                stop,
+                period_in_seconds,
+                number_of_reattempts,
+                reattempt_duration_in_seconds
+                )
+            )
         self._processes.append(p)
 
 recurring_scheduler = Recurring(verbose=True)

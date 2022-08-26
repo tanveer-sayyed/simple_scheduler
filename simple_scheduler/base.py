@@ -1,16 +1,17 @@
 from time import time, sleep
+from pytz import all_timezones, timezone
 from datetime import datetime
 from functools import partial
 from multiprocess import Process
-from pytz import all_timezones, timezone
 
 class Schedule():
-    """ The parent of "event" and "recurring" classes."""
-
-    def __init__(self, verbose=False):
-        self._processes = []
+    def __init__(
+            self,
+            verbose:bool=False
+            ) -> None:
+        self._jobs = {}
         self._workers = []
-        self.verbose = verbose
+        self._processes = []
         self._days = {
             0:"mon",
             1:"tue",
@@ -20,7 +21,7 @@ class Schedule():
             5:"sat",
             6:"sun"
             }
-        self._jobs = {}
+        self.verbose = verbose
 
     def job_summary(self):
         """
@@ -45,7 +46,7 @@ class Schedule():
 
     def timezones(self):
         """
-        A quick look-up of different time-zones.
+        A quick look-up of all pytz time-zones.
 
         Returns
         -------
@@ -55,7 +56,10 @@ class Schedule():
         """
         return all_timezones
 
-    def _print(self, message):
+    def _print(
+            self,
+            message
+            ):
         """
         To silence, this class, if need be.
 
@@ -72,7 +76,10 @@ class Schedule():
         if self.verbose:
             print(message)
 
-    def _sleep(self, period_in_seconds):
+    def _sleep(
+            self,
+            period_in_seconds
+               ):
         """
         Resourceful sleep
 
@@ -93,17 +100,28 @@ class Schedule():
                     self._workers.remove(x)
             sleep(s - time())
 
-    def _execute(self,
-                 tz,
-                 start,
-                 stop,
-                 function,
-                 period_in_seconds,
-                 number_of_reattempts,
-                 reattempt_duration_in_seconds):
+    def _execute(
+            self,
+            tz,
+            start,
+            stop,
+            function,
+            period_in_seconds,
+            number_of_reattempts,
+            reattempt_duration_in_seconds
+            ):
         """
         Parameters
         ----------
+        tz : str
+            standard time zone (call the method .timezones() for more info)
+            the default is "GMT"
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
         function : callable function
             name of the function which needs to be scheduled
         period_in_seconds : int
@@ -125,9 +143,11 @@ class Schedule():
             p.start(); self._workers.append(p)
             timer = time() + period_in_seconds
             for tries in range(number_of_reattempts + 1):
-                self._sleep(period_in_seconds = timer - \
-                                                time() - \
-                                                reattempt_duration_in_seconds)
+                self._sleep(
+                    period_in_seconds = timer - \
+                                        time() - \
+                                        reattempt_duration_in_seconds
+                            )
                 if (number_of_reattempts > 1) & (p.exitcode != 0):
                     p.join()
                     p = Process(target = function)
@@ -157,7 +177,13 @@ class Schedule():
             [p.terminate() for p in self._processes]
             pass
 
-    def _manifest_function(self, target, job_name, args, kwargs):
+    def _manifest_function(
+            self,
+            target,
+            job_name,
+            args,
+            kwargs
+            ):
         """
         Wraps the function in its own
         parameters for future execution.
@@ -186,7 +212,30 @@ class Schedule():
             self._processes = []
             raise
 
-    def _validate_start_stop(self, start, stop):
+    def _validate_start_stop(
+            self,
+            start,
+            stop
+            ):
+        """
+        Parameters
+        ----------
+        start : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+        stop : str, optional
+            of the form "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")
+            the default is None
+
+        Raises
+        ------
+        Exception
+
+        Returns
+        -------
+        None.
+
+        """
         try:
             for x in [start, stop]:
                 if x:
@@ -200,7 +249,10 @@ class Schedule():
             raise Exception('start/stop must be of the form'+\
                             ' "Month DD HH:MM:SS YYYY" (eg. "Dec 31 23:59:59 2021")')
 
-    def remove_job(self, job_name):
+    def remove_job(
+            self,
+            job_name
+            ):
         """
         Remove job from schedule by providing job_name
 
@@ -222,7 +274,10 @@ class Schedule():
         else:
             self._print("No such job_name exists.")
 
-    def _remove_job(self, this_job):
+    def _remove_job(
+            self,
+            this_job
+            ):
         """
         Helper function.
 
