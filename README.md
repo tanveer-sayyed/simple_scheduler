@@ -89,55 +89,55 @@ recurring_scheduler.run()
 
 ```
 ## APIs
-### Toggle verbose
+#### Toggle verbose
 ```python
 event_scheduler.verbose=False
 recurring_scheduler.verbose=True
 ```
 
-### Job summary
+#### Job summary
 ```python
 event_scheduler.job_summary()
 recurring_scheduler.job_summary()
 ```
     
-### Number of reattempts in case event fails [fallback]
+#### Number of reattempts in case event fails [fallback]
 ```python
 event_scheduler.add_job(number_of_reattempts=3)
 recurring_scheduler.add_job(number_of_reattempts=0)
 ```
 
-### Reattempt duration(in seconds) between each reattempt [fallback]
+#### Reattempt duration(in seconds) between each reattempt [fallback]
 ```python
 event_scheduler.add_job(reattempt_duration_in_seconds=10)
 recurring_scheduler.add_job(reattempt_duration_in_seconds=10)
 ```
 
-### Start time (keep the scheduler running but postpone execution until this time)
+#### Start time (keep the scheduler running but postpone execution until this time)
 ```python
 event_scheduler.add_job(start="Dec 31 23:59:59 2021")
 recurring_scheduler.add_job(start="Dec 31 23:59:59 2021")
 ```
     
-### Stop time (time when a job expires)
+#### Stop time (time when a job expires)
 ```python
 event_scheduler.add_job(stop="Dec 31 23:59:59 2021")
 recurring_scheduler.add_job(stop="Dec 31 23:59:59 2021")
 ```
     
-### Remove a single job
+#### Remove a single job
 ```python
 event_scheduler.remove_job(job_name)
 recurring_scheduler.remove_job(job_name)
 ```
     
-### Clear schedule (remove all jobs)
+#### Clear schedule (remove all jobs)
 ```python
 event_scheduler.clear()
 recurring_scheduler.clear()
 ```
 
-### The parameter - when, in event scheduler
+#### The parameter - when, in event scheduler
 ```python
 # its List[str], collection of "day|HH:MM"
 # can take values like
