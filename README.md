@@ -40,7 +40,7 @@ event_scheduler.add_job(
     reattempt_duration_in_seconds=5
     )
 event_scheduler.add_job(
-    target= print_args,
+    target=print_args,
     args=(0, 2, "arg1", "arg2"),
     kwargs={
         "key1":"value1",
@@ -91,8 +91,8 @@ recurring_scheduler.run()
 ## APIs
 ### Toggle verbose
 ```python
-event_scheduler.verbose = False
-recurring_scheduler.verbose = True
+event_scheduler.verbose=False
+recurring_scheduler.verbose=True
 ```
 
 ### Job summary
@@ -103,14 +103,14 @@ recurring_scheduler.job_summary()
     
 ### Number of reattempts in case event fails [fallback]
 ```python
-event_scheduler.add_job(number_of_reattempts = 3)
-recurring_scheduler.add_job(number_of_reattempts = 0)
+event_scheduler.add_job(number_of_reattempts=3)
+recurring_scheduler.add_job(number_of_reattempts=0)
 ```
 
 ### Reattempt duration(in seconds) between each reattempt [fallback]
 ```python
-event_scheduler.add_job(reattempt_duration_in_seconds = 10)
-recurring_scheduler.add_job(reattempt_duration_in_seconds = 10)
+event_scheduler.add_job(reattempt_duration_in_seconds=10)
+recurring_scheduler.add_job(reattempt_duration_in_seconds=10)
 ```
 
 ### Start time (keep the scheduler running but postpone execution until this time)
@@ -136,11 +136,25 @@ recurring_scheduler.remove_job(job_name)
 event_scheduler.clear()
 recurring_scheduler.clear()
 ```
-    
+
+### The parameter - when, in event scheduler
+```python
+# its List[str], collection of "day|HH:MM"
+# can take values like
+    day|HH:MM,
+    *|HH:MM,
+    *|*H:MM,
+    *|*H:MM,
+    *|**:MM,
+    *|**:*M,
+    *|**:M*
+# day:str = mon/tue/wed/thu/fri/sat/sun
+```
+
 ### Docker with gunicorn
     In app.py ensure that scheduler is started globally and not within main()
 ```python
-event_scheduler.run()
+event_scheduler.run() # global variable
 
 if __name__ == "__main__":
    app.run(host="0.0.0.0", port="5000")
