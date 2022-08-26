@@ -119,7 +119,7 @@ event_scheduler.add_job(start="Dec 31 23:59:59 2021")
 recurring_scheduler.add_job(start="Dec 31 23:59:59 2021")
 ```
     
-### Stop time (time when scheduler expires)
+### Stop time (time when a job expires)
 ```python
 event_scheduler.add_job(stop="Dec 31 23:59:59 2021")
 recurring_scheduler.add_job(stop="Dec 31 23:59:59 2021")
