@@ -57,7 +57,7 @@ event_scheduler.add_job(
 event_scheduler.run()
 ```
 
-2. Recurring Scheduler (tasks occur after every "x"-seconds)
+2. Recurring scheduler (tasks occur after every "x"-seconds)
 ```python
 from simple_scheduler.recurring import recurring_scheduler
 from time import sleep, ctime, time
