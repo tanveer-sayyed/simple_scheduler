@@ -1,7 +1,7 @@
 # simple_scheduler
 - Does not miss future events.
 - Works even when period < execution time
-- Works on any platform (Linux, Windows, Mac)
+- Tested on only linux platform
 - Uses light weight multiprocessing to schedule jobs.
 - This package uses a 24-hour clock, only.
 - Simultaneously schedule any number of jobs.
